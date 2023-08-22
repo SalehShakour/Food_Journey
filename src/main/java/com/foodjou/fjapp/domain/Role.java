@@ -1,9 +1,6 @@
 package com.foodjou.fjapp.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
@@ -13,12 +10,14 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
-@Table(name = "role")
+@Table(name = "roles")
 public class Role {
     @Id
-    private String role_name;
+    @GeneratedValue
+    @Column(name = "id")
+    private Long id;
+    @Column(name = "role_name")
+    private String roleName;
+    @Column(name = "description")
     private String description;
-    //Todo delete comment if unusable
-//    @OneToMany(mappedBy = "role")
-//    private List<User> users;
 }

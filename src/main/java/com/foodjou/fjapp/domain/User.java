@@ -1,27 +1,31 @@
 package com.foodjou.fjapp.domain;
 
 import jakarta.persistence.*;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.List;
 
 @Getter
 @Setter
 @Entity
-@Table(name = "user_table")
+@Table(name = "users")
 public class User {
     @Id
+    @GeneratedValue
+    @Column(name = "id")
+    private Long id;
+    @Column(name = "username")
     private String username;
+    @Column(name = "firstname")
     private String firstname;
+    @Column(name = "lastname")
     private String lastname;
+    @Column(name = "password")
     private String password;
-    private String phone_number;
+    @Column(name = "phone_number")
+    private String phoneNumber;
+    @Column(name = "address")
     private String address;
     @ManyToOne
     private Role role;
-    //Todo delete comment if unusable
-//    @OneToMany(mappedBy = "owner")
-//    private List<Restaurant> ownedRestaurants;
 }
