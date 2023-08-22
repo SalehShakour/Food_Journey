@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequestMapping("/api/roles")
 public class RoleController {
     private final RoleService roleService;
 
@@ -16,7 +17,7 @@ public class RoleController {
         this.roleService = roleService;
     }
 
-    @PostMapping("/api/roles")
+    @PostMapping("")
     public ResponseEntity<String> addRole(@RequestBody Role role) {
         try {
             roleService.addRole(role);
@@ -26,7 +27,7 @@ public class RoleController {
         }
     }
 
-    @GetMapping("/api/roles/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<Role> getRoleById(@PathVariable String id) {
         try {
             Role role = roleService.getRoleById(id);
@@ -36,7 +37,7 @@ public class RoleController {
         }
     }
 
-    @DeleteMapping("/api/roles/{id}")
+    @DeleteMapping("{id}")
     public ResponseEntity<String> deleteRoleById(@PathVariable String id) {
         try {
             roleService.deleteRoleById(id);
@@ -46,7 +47,7 @@ public class RoleController {
         }
     }
 
-    @PutMapping("/api/roles/{id}")
+    @PutMapping("{id}")
     public ResponseEntity<String> updateRoleById(@PathVariable String id, @RequestBody Role updatedRole) {
         try {
             roleService.updateRoleById(id, updatedRole);
