@@ -52,7 +52,7 @@ public class RoleController {
             roleService.updateRoleById(id, updatedRole);
             return ResponseEntity.status(HttpStatus.OK).body("Role updated successfully");
         } catch (EmptyResultDataAccessException ex) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Role not found");
         }
     }
 }
