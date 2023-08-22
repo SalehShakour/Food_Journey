@@ -20,7 +20,7 @@ public class RoleController {
     public ResponseEntity<String> addRole(@RequestBody Role role) {
         try {
             roleService.addRole(role);
-            return ResponseEntity.status(HttpStatus.CREATED).body("Role created successfully");
+            return ResponseEntity.status(HttpStatus.CREATED).build();
         } catch (DataIntegrityViolationException ex) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Role data is not valid");
         }
