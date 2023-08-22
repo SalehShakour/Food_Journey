@@ -35,7 +35,7 @@ public class UserService {
             if (updatedUser.getAddress() != null) existingUser.setAddress(updatedUser.getAddress());
             if (updatedUser.getPhoneNumber() != null) existingUser.setPhoneNumber(updatedUser.getPhoneNumber());
             if (updatedUser.getRole() != null) existingUser.setRole(updatedUser.getRole());
-
+            userRepository.save(existingUser);
         }
     }
 }

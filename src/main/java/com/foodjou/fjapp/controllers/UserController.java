@@ -26,14 +26,19 @@ public class UserController {
         }
     }
     @GetMapping("/{id}")
-    public ResponseEntity<User> getUserById(@PathVariable String id){
+    public ResponseEntity<User> getUserById(@PathVariable String id) {
         try {
             User user = userService.getUserById(id);
-            return ResponseEntity.status(HttpStatus.OK).body(user);
-        }catch (DataIntegrityViolationException ex){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            if (user != null) {
+                return ResponseEntity.status(HttpStatus.OK).body(user);
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+        } catch (NumberFormatException ex) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
     }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteUserById(@PathVariable String id){
         try{

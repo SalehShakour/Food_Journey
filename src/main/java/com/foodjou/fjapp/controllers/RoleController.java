@@ -31,11 +31,16 @@ public class RoleController {
     public ResponseEntity<Role> getRoleById(@PathVariable String id) {
         try {
             Role role = roleService.getRoleById(id);
-            return ResponseEntity.status(HttpStatus.OK).body(role);
+            if (role != null) {
+                return ResponseEntity.status(HttpStatus.OK).body(role);
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
         } catch (DataIntegrityViolationException ex) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+
 
     @DeleteMapping("{id}")
     public ResponseEntity<String> deleteRoleById(@PathVariable String id) {
