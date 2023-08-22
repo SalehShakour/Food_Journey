@@ -21,6 +21,7 @@ public class User {
     private String address;
     @ManyToOne
     private Role role;
-    @OneToMany(mappedBy = "owner")
-    private List<Restaurant> ownedRestaurants;
+    //Todo delete comment if unusable
+//    @OneToMany(mappedBy = "owner")
+//    private List<Restaurant> ownedRestaurants;
 }

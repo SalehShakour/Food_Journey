@@ -18,6 +18,7 @@ public class Role {
     @Id
     private String role_name;
     private String description;
-    @OneToMany(mappedBy = "role")
-    private List<User> users;
+    //Todo delete comment if unusable
+//    @OneToMany(mappedBy = "role")
+//    private List<User> users;
 }
