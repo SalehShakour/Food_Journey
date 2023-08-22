@@ -1,7 +1,5 @@
 package com.foodjou.fjapp.domain;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
@@ -9,11 +7,16 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "food")
+@Table(name = "foods")
 public class Food {
     @Id
+    @GeneratedValue
+    @Column(name = "id")
     private long id;
-    private String food_name;
+    @Column(name = "food_name")
+    private String foodName;
+    @Column(name = "price")
     private double price;
+    @Column(name = "description")
     private String description;
 }

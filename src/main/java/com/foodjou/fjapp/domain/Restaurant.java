@@ -8,13 +8,18 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "restaurant")
+@Table(name = "restaurants")
 public class Restaurant {
     @Id
+    @GeneratedValue
+    @Column(name = "id")
     private long id;
-    private String restaurant_name;
+    @Column(name = "restaurant_name")
+    private String restaurantName;
+    @Column(name = "address")
     private String address;
-    private String phone_number;
+    @Column(name = "phone_number")
+    private String phoneNumber;
     @ManyToOne
     private User owner;
 }
