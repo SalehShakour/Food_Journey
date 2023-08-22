@@ -26,10 +26,8 @@ public class RoleService {
     public void updateRoleById(String id, Role updatedRole) {
         Role existingRole = roleRepository.findById(Long.valueOf(id)).orElse(null);
         if (existingRole != null) {
-            // Update the fields of existingRole using updatedRole
             existingRole.setRoleName(updatedRole.getRoleName());
             existingRole.setDescription(updatedRole.getDescription());
-            // Save the updated role
             roleRepository.save(existingRole);
         }
     }
