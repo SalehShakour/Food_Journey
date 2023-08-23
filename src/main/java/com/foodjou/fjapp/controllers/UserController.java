@@ -1,9 +1,8 @@
 package com.foodjou.fjapp.controllers;
 
-import com.foodjou.fjapp.domain.User;
 import com.foodjou.fjapp.services.UserService;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.dao.EmptyResultDataAccessException;
+import com.foodjou.fjapp.dto.SignUpRequestDTO;
+import com.foodjou.fjapp.dto.UserDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -19,20 +18,17 @@ public class UserController {
         this.userService = userService;
     }
 
-    @PostMapping("")
-    public ResponseEntity<String> addUser(@Validated @RequestBody User user) {
-        userService.addUser(user);
+    @PostMapping("/signup")
+    public ResponseEntity<String> addUser(@Validated @RequestBody SignUpRequestDTO signUpRequestDTO) {
+        userService.signUpUser(signUpRequestDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body("User created successfully");
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getUserById(@PathVariable String id) {
-        User user = userService.getUserById(id);
-        if (user != null) {
-            return ResponseEntity.status(HttpStatus.OK).body(user);
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
+    public ResponseEntity<UserDTO> getUserById(@PathVariable String id) {
+        UserDTO userDTO = userService.getUserById(id);
+        return ResponseEntity.status(HttpStatus.OK).body(userDTO);
+
     }
 
     @DeleteMapping("/{id}")
@@ -42,8 +38,8 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<String> updateUserById(@PathVariable String id, @Validated @RequestBody User updatedUser) {
-        userService.updateUserById(id, updatedUser);
+    public ResponseEntity<String> updateUserById(@PathVariable String id, @Validated @RequestBody UserDTO updatedUserDTO) {
+        userService.updateUserById(id, updatedUserDTO);
         return ResponseEntity.status(HttpStatus.OK).body("User updated successfully");
 
     }

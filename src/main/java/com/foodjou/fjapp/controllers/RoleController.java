@@ -1,9 +1,8 @@
 package com.foodjou.fjapp.controllers;
 
-import com.foodjou.fjapp.domain.Role;
 import com.foodjou.fjapp.services.RoleService;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.dao.EmptyResultDataAccessException;
+import com.foodjou.fjapp.dto.RoleDTO;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,25 +17,14 @@ public class RoleController {
     }
 
     @PostMapping("")
-    public ResponseEntity<String> addRole(@RequestBody Role role) {
-        try {
-            roleService.addRole(role);
-            return ResponseEntity.status(HttpStatus.CREATED).body("Role created successfully");
-        } catch (DataIntegrityViolationException ex) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Role data is not valid");
-        }
+    public ResponseEntity<String> addRole(@Valid @RequestBody RoleDTO roleDTO) {
+        roleService.addRole(roleDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body("Role created successfully");
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Role> getRoleById(@PathVariable String id) {
-
-        Role role = roleService.getRoleById(id);
-        if (role != null) {
-            return ResponseEntity.status(HttpStatus.OK).body(role);
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
-
+    public ResponseEntity<RoleDTO> getRoleById(@PathVariable String id) {
+        return ResponseEntity.status(HttpStatus.OK).body(roleService.getRoleById(id));
     }
 
     @DeleteMapping("{id}")
@@ -48,9 +36,8 @@ public class RoleController {
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<String> updateRoleById(@PathVariable String id, @RequestBody Role updatedRole) {
-
-        roleService.updateRoleById(id, updatedRole);
+    public ResponseEntity<String> updateRoleById(@PathVariable String id,@Valid @RequestBody RoleDTO updatedRoleDTO) {
+        roleService.updateRoleById(id, updatedRoleDTO);
         return ResponseEntity.status(HttpStatus.OK).body("Role updated successfully");
 
     }

@@ -1,41 +1,44 @@
 package com.foodjou.fjapp.services;
 
 import com.foodjou.fjapp.domain.User;
+import com.foodjou.fjapp.mapper.MapStructUser;
 import com.foodjou.fjapp.repositories.UserRepository;
+import com.foodjou.fjapp.exception.CustomException;
+import com.foodjou.fjapp.dto.SignUpRequestDTO;
+import com.foodjou.fjapp.dto.UserDTO;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class UserService {
     private final UserRepository userRepository;
+    private final MapStructUser mapStructUser;
 
-    public UserService(UserRepository userRepository) {
+    @Autowired
+    public UserService(UserRepository userRepository, MapStructUser mapStructUser) {
         this.userRepository = userRepository;
-
+        this.mapStructUser = mapStructUser;
     }
 
-    public void addUser(User user) {
+    public void signUpUser(SignUpRequestDTO signUpRequestDTO) {
+        User user = mapStructUser.userDtoToUser(signUpRequestDTO);
         userRepository.save(user);
     }
 
-    public User getUserById(String id) {
-        return userRepository.findById(Long.valueOf(id)).orElse(null);
+    public UserDTO getUserById(String id) {
+        User user = userRepository.findById(Long.valueOf(id)).orElseThrow(() -> new CustomException("User not found"));
+        return mapStructUser.userToUserDTO(user);
     }
 
     public void deleteUserById(String id) {
-        userRepository.deleteById(Long.valueOf(id));
+        User user = userRepository.findById(Long.valueOf(id)).orElseThrow(() -> new CustomException("User not found"));
+        userRepository.delete(user);
     }
 
-    public void updateUserById(String id, User updatedUser) {
-        User existingUser = userRepository.findById(Long.valueOf(id)).orElse(null);
-        if (existingUser != null) {
-            if (updatedUser.getUsername() != null) existingUser.setUsername(updatedUser.getUsername());
-            if (updatedUser.getFirstname() != null) existingUser.setFirstname(updatedUser.getFirstname());
-            if (updatedUser.getLastname() != null) existingUser.setLastname(updatedUser.getLastname());
-            if (updatedUser.getPassword() != null) existingUser.setPassword(updatedUser.getPassword());
-            if (updatedUser.getAddress() != null) existingUser.setAddress(updatedUser.getAddress());
-            if (updatedUser.getPhoneNumber() != null) existingUser.setPhoneNumber(updatedUser.getPhoneNumber());
-            if (updatedUser.getRole() != null) existingUser.setRole(updatedUser.getRole());
-            userRepository.save(existingUser);
-        }
+    public void updateUserById(String id, UserDTO updatedUserDTO) {
+        User existingUser = userRepository.findById(Long.valueOf(id))
+                .orElseThrow(() -> new CustomException("User not found"));
+        mapStructUser.updateUserDtoToUser(updatedUserDTO, existingUser);
+        userRepository.save(existingUser);
     }
 }
