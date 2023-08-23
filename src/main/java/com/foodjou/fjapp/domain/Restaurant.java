@@ -26,8 +26,8 @@ public class Restaurant {
     private String phoneNumber;
     @ManyToOne
     private User owner;
-    @OneToMany
-    private List<Food> foods = new ArrayList<>();
+    @OneToMany(cascade = CascadeType.ALL)
+    private List<Food> foods;
 
 }
 

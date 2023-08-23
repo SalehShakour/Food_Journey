@@ -2,8 +2,10 @@ package com.foodjou.fjapp.controllers;
 
 import com.foodjou.fjapp.domain.Food;
 import com.foodjou.fjapp.services.FoodService;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.dao.EmptyResultDataAccessException;
+
+import com.foodjou.fjapp.dto.FoodDTO;
+import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,26 +13,24 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/foods")
 public class FoodController {
+
     private final FoodService foodService;
 
+    @Autowired
     public FoodController(FoodService foodService) {
         this.foodService = foodService;
     }
 
     @PostMapping("")
-    public ResponseEntity<String> addFood(@RequestBody Food food) {
-        foodService.addFood(food);
+    public ResponseEntity<String> addFood(@Valid @RequestBody FoodDTO foodDTO) {
+        foodService.addFood(foodDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body("Food created successfully");
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Food> getFoodById(@PathVariable String id) {
-        Food food = foodService.getFoodById(id);
-        if (food != null) {
-            return ResponseEntity.status(HttpStatus.OK).body(food);
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
+    public ResponseEntity<FoodDTO> getFoodById(@PathVariable String id) {
+        FoodDTO foodDTO = foodService.getFoodById(id);
+        return ResponseEntity.status(HttpStatus.OK).body(foodDTO);
 
     }
 
@@ -41,9 +41,8 @@ public class FoodController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<String> updateFoodById(@PathVariable String id, @RequestBody Food updatedFood) {
-        foodService.updateFoodById(id, updatedFood);
+    public ResponseEntity<String> updateFoodById(@PathVariable String id,@Valid @RequestBody FoodDTO updatedFoodDTO) {
+        foodService.updateFoodById(id, updatedFoodDTO);
         return ResponseEntity.status(HttpStatus.OK).body("Food updated successfully");
-
     }
 }
