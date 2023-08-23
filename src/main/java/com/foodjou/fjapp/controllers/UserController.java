@@ -6,57 +6,45 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/users")
+
 public class UserController {
     private final UserService userService;
 
     public UserController(UserService userService) {
         this.userService = userService;
     }
+
     @PostMapping("")
-    public ResponseEntity<String> addUser(@RequestBody User user){
-        try{
-            userService.addUser(user);
-            return ResponseEntity.status(HttpStatus.CREATED).body("User created successfully");
-        }catch (DataIntegrityViolationException ex){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("User data is not valid");
-        }
+    public ResponseEntity<String> addUser(@Validated @RequestBody User user) {
+        userService.addUser(user);
+        return ResponseEntity.status(HttpStatus.CREATED).body("User created successfully");
     }
+
     @GetMapping("/{id}")
-    public ResponseEntity<User> getUserById(@PathVariable String id) {
-        try {
-            User user = userService.getUserById(id);
-            if (user != null) {
-                return ResponseEntity.status(HttpStatus.OK).body(user);
-            } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-            }
-        } catch (NumberFormatException ex) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+    public ResponseEntity<?> getUserById(@PathVariable String id) {
+        User user = userService.getUserById(id);
+        if (user != null) {
+            return ResponseEntity.status(HttpStatus.OK).body(user);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteUserById(@PathVariable String id){
-        try{
-            userService.deleteUserById(id);
-            return ResponseEntity.status(HttpStatus.OK).body("User deleted successfully");
-        }catch (EmptyResultDataAccessException ex){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
+    public ResponseEntity<String> deleteUserById(@PathVariable String id) {
+        userService.deleteUserById(id);
+        return ResponseEntity.status(HttpStatus.OK).body("User deleted successfully");
     }
-    @PutMapping("/{id}")
-    public ResponseEntity<String> updateUserById(@PathVariable String id, @RequestBody User updatedUser){
-        try{
-            userService.updateUserById(id, updatedUser);
-            return ResponseEntity.status(HttpStatus.OK).body("User updated successfully");
-        }catch (EmptyResultDataAccessException ex){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<String> updateUserById(@PathVariable String id, @Validated @RequestBody User updatedUser) {
+        userService.updateUserById(id, updatedUser);
+        return ResponseEntity.status(HttpStatus.OK).body("User updated successfully");
 
     }
 }

@@ -17,49 +17,33 @@ public class FoodController {
         this.foodService = foodService;
     }
 
-    @PostMapping("/")
+    @PostMapping("")
     public ResponseEntity<String> addFood(@RequestBody Food food) {
-        try {
-            foodService.addFood(food);
-            return ResponseEntity.status(HttpStatus.CREATED).body("Food created successfully");
-        } catch (DataIntegrityViolationException ex) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Food data is not valid");
-        }
+        foodService.addFood(food);
+        return ResponseEntity.status(HttpStatus.CREATED).body("Food created successfully");
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Food> getFoodById(@PathVariable String id) {
-        try {
-            Food food = foodService.getFoodById(id);
-            if (food != null) {
-                return ResponseEntity.status(HttpStatus.OK).body(food);
-            } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-            }
-        } catch (NumberFormatException ex) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        Food food = foodService.getFoodById(id);
+        if (food != null) {
+            return ResponseEntity.status(HttpStatus.OK).body(food);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
+
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteFoodById(@PathVariable String id) {
-        try {
-            foodService.deleteFoodById(id);
-            return ResponseEntity.status(HttpStatus.OK).body("Food deleted successfully");
-        } catch (EmptyResultDataAccessException ex) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Food not found");
-        }
+        foodService.deleteFoodById(id);
+        return ResponseEntity.status(HttpStatus.OK).body("Food deleted successfully");
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<String> updateFoodById(@PathVariable String id, @RequestBody Food updatedFood) {
-        try {
-            foodService.updateFoodById(id, updatedFood);
-            return ResponseEntity.status(HttpStatus.OK).body("Food updated successfully");
-        } catch (EmptyResultDataAccessException ex) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Food not found");
-        } catch (NumberFormatException ex) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
+        foodService.updateFoodById(id, updatedFood);
+        return ResponseEntity.status(HttpStatus.OK).body("Food updated successfully");
+
     }
 }

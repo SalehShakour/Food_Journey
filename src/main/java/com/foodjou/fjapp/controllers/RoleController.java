@@ -29,36 +29,29 @@ public class RoleController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Role> getRoleById(@PathVariable String id) {
-        try {
-            Role role = roleService.getRoleById(id);
-            if (role != null) {
-                return ResponseEntity.status(HttpStatus.OK).body(role);
-            } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-            }
-        } catch (DataIntegrityViolationException ex) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
-    }
 
+        Role role = roleService.getRoleById(id);
+        if (role != null) {
+            return ResponseEntity.status(HttpStatus.OK).body(role);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+
+    }
 
     @DeleteMapping("{id}")
     public ResponseEntity<String> deleteRoleById(@PathVariable String id) {
-        try {
-            roleService.deleteRoleById(id);
-            return ResponseEntity.status(HttpStatus.OK).body("Role deleted successfully");
-        } catch (EmptyResultDataAccessException ex) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Role not found");
-        }
+
+        roleService.deleteRoleById(id);
+        return ResponseEntity.status(HttpStatus.OK).body("Role deleted successfully");
+
     }
 
     @PutMapping("{id}")
     public ResponseEntity<String> updateRoleById(@PathVariable String id, @RequestBody Role updatedRole) {
-        try {
-            roleService.updateRoleById(id, updatedRole);
-            return ResponseEntity.status(HttpStatus.OK).body("Role updated successfully");
-        } catch (EmptyResultDataAccessException ex) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Role not found");
-        }
+
+        roleService.updateRoleById(id, updatedRole);
+        return ResponseEntity.status(HttpStatus.OK).body("Role updated successfully");
+
     }
 }
