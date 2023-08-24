@@ -1,7 +1,6 @@
 package com.foodjou.fjapp.dto;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+import com.foodjou.fjapp.dto.entityDTO.FoodDTO;
 
 import java.util.List;
 

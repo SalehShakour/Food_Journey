@@ -10,7 +10,7 @@ import lombok.Setter;
 @Table(name = "foods")
 public class Food {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private long id;
     @Column(name = "food_name")
@@ -19,4 +19,7 @@ public class Food {
     private Double price;
     @Column(name = "description")
     private String description;
+    @ManyToOne
+    @JoinColumn(name = "restaurant_id") // This refers to the foreign key in the Restaurant table
+    private Restaurant restaurant;
 }

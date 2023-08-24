@@ -10,10 +10,12 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
-@Table(name = "roles")
+@Table(name = "roles", uniqueConstraints = {
+        @UniqueConstraint(columnNames = "role_name")
+})
 public class Role {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
     @Column(name = "role_name")

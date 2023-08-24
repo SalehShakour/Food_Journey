@@ -1,8 +1,7 @@
-package com.foodjou.fjapp.controllers;
+package com.foodjou.fjapp.controllers.entityController;
 
-import com.foodjou.fjapp.services.UserService;
-import com.foodjou.fjapp.dto.SignUpRequestDTO;
-import com.foodjou.fjapp.dto.UserDTO;
+import com.foodjou.fjapp.services.entityService.UserService;
+import com.foodjou.fjapp.dto.entityDTO.UserDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -16,12 +15,6 @@ public class UserController {
 
     public UserController(UserService userService) {
         this.userService = userService;
-    }
-
-    @PostMapping("/signup")
-    public ResponseEntity<String> addUser(@Validated @RequestBody SignUpRequestDTO signUpRequestDTO) {
-        userService.signUpUser(signUpRequestDTO);
-        return ResponseEntity.status(HttpStatus.CREATED).body("User created successfully");
     }
 
     @GetMapping("/{id}")

@@ -1,7 +1,7 @@
-package com.foodjou.fjapp.controllers;
+package com.foodjou.fjapp.controllers.entityController;
 
-import com.foodjou.fjapp.services.RoleService;
-import com.foodjou.fjapp.dto.RoleDTO;
+import com.foodjou.fjapp.services.entityService.RoleService;
+import com.foodjou.fjapp.dto.entityDTO.RoleDTO;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

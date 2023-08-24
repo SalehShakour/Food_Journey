@@ -1,12 +1,14 @@
-package com.foodjou.fjapp.services;
+package com.foodjou.fjapp.services.entityService;
 
 import com.foodjou.fjapp.domain.Role;
 import com.foodjou.fjapp.exception.CustomException;
-import com.foodjou.fjapp.mapper.MapStructRole;
+import com.foodjou.fjapp.mapper.entityMapper.MapStructRole;
 import com.foodjou.fjapp.repositories.RoleRepository;
-import com.foodjou.fjapp.dto.RoleDTO;
+import com.foodjou.fjapp.dto.entityDTO.RoleDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class RoleService {
@@ -38,6 +40,11 @@ public class RoleService {
         Role existingRole = roleRepository.findById(Long.valueOf(id)).orElseThrow(() -> new CustomException("Role not found"));
         existingRole = mapStructRole.updateRoleDtoToRole(updatedRoleDTO, existingRole);
         roleRepository.save(existingRole);
+    }
+    public Long getRoleIdWithName(String roleName) {
+        List<Role> roles = roleRepository.findByRoleName(roleName);
+        if (roles.isEmpty()) return -1L;
+        else return roles.get(0).getId();
     }
 }
 
