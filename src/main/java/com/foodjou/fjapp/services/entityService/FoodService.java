@@ -1,9 +1,9 @@
-package com.foodjou.fjapp.services;
+package com.foodjou.fjapp.services.entityService;
 import com.foodjou.fjapp.domain.Food;
 import com.foodjou.fjapp.exception.CustomException;
-import com.foodjou.fjapp.mapper.MapStructFood;
+import com.foodjou.fjapp.mapper.entityMapper.MapStructFood;
 import com.foodjou.fjapp.repositories.FoodRepository;
-import com.foodjou.fjapp.dto.FoodDTO;
+import com.foodjou.fjapp.dto.entityDTO.FoodDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +19,7 @@ public class FoodService {
     }
 
     public void addFood(FoodDTO foodDTO) {
+        //Todo update restaurant menu
         foodRepository.save(mapStructFood.foodDtoToFood(foodDTO));
     }
 

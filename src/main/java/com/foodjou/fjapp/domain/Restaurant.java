@@ -15,7 +15,7 @@ import java.util.List;
 @Table(name = "restaurants")
 public class Restaurant {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private long id;
     @Column(name = "restaurant_name")
@@ -24,9 +24,12 @@ public class Restaurant {
     private String address;
     @Column(name = "phone_number")
     private String phoneNumber;
+
     @ManyToOne
+    @JoinColumn(name = "owner_id") // This is the foreign key column in the Food table
     private User owner;
-    @OneToMany(cascade = CascadeType.ALL)
+
+    @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL)
     private List<Food> foods;
 
 }

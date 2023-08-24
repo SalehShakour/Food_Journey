@@ -1,7 +1,7 @@
-package com.foodjou.fjapp.mapper;
+package com.foodjou.fjapp.mapper.entityMapper;
 
 import com.foodjou.fjapp.domain.Food;
-import com.foodjou.fjapp.dto.FoodDTO;
+import com.foodjou.fjapp.dto.entityDTO.FoodDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 

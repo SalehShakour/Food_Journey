@@ -1,16 +1,16 @@
-package com.foodjou.fjapp.services;
+package com.foodjou.fjapp.services.entityService;
 
 import com.foodjou.fjapp.domain.Food;
 import com.foodjou.fjapp.domain.Restaurant;
 import com.foodjou.fjapp.domain.User;
-import com.foodjou.fjapp.dto.FoodDTO;
+import com.foodjou.fjapp.dto.entityDTO.FoodDTO;
 import com.foodjou.fjapp.dto.MenuDTO;
 import com.foodjou.fjapp.exception.CustomException;
-import com.foodjou.fjapp.mapper.MapStructFood;
+import com.foodjou.fjapp.mapper.entityMapper.MapStructFood;
 import com.foodjou.fjapp.mapper.MapStructMenu;
-import com.foodjou.fjapp.mapper.MapStructRestaurant;
+import com.foodjou.fjapp.mapper.entityMapper.MapStructRestaurant;
 import com.foodjou.fjapp.repositories.RestaurantRepository;
-import com.foodjou.fjapp.dto.RestaurantDTO;
+import com.foodjou.fjapp.dto.entityDTO.RestaurantDTO;
 import com.foodjou.fjapp.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -67,15 +67,14 @@ public class RestaurantService {
         return menuDTO.result();
     }
 
-    public void addFoodToMenu(String id, FoodDTO foodDTO) {
-        Restaurant restaurant = restaurantRepository.findById(Long.valueOf(id))
-                .orElseThrow(() -> new CustomException("Restaurant not found"));
-
-        List<Food> tempFoodList = restaurant.getFoods();
-        tempFoodList.add(mapStructFood.foodDtoToFood(foodDTO));
-        System.out.println(tempFoodList);
-        restaurant.setFoods(tempFoodList);
-        restaurantRepository.save(restaurant);
-    }
+//    public void addFoodToMenu(String id, FoodDTO foodDTO) {
+//        Restaurant restaurant = restaurantRepository.findById(Long.valueOf(id))
+//                .orElseThrow(() -> new CustomException("Restaurant not found"));
+//
+//        List<Food> tempFoodList = restaurant.getFoods();
+//        tempFoodList.add(mapStructFood.foodDtoToFood(foodDTO));
+//        restaurant.setFoods(tempFoodList);
+//        restaurantRepository.save(restaurant);
+//    }
 
 }

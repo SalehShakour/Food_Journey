@@ -1,10 +1,9 @@
-package com.foodjou.fjapp.mapper;
+package com.foodjou.fjapp.mapper.entityMapper;
 
 import com.foodjou.fjapp.domain.Role;
-import com.foodjou.fjapp.dto.RoleDTO;
+import com.foodjou.fjapp.dto.entityDTO.RoleDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.MappingTarget;
 
 @Mapper(componentModel = "spring")
 public interface MapStructRole {
