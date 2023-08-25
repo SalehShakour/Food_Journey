@@ -44,7 +44,7 @@ public class User implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<SimpleGrantedAuthority> authorities = new ArrayList<>();
-        for (Role role: roles){
+        for (Role role : roles) {
             authorities.add(new SimpleGrantedAuthority(role.getName()));
         }
         return authorities;
@@ -80,7 +80,40 @@ public class User implements UserDetails {
         return true;
     }
 
+    public boolean hasRole(String roleName) {
+        for (Role role : roles
+        ) {
+            if (role.getName().equals(roleName)) {
+                return true;
+            }
+        }
+        return false;
+    }
+    public Long getRoleId(String roleName){
+        for (Role role : roles
+        ) {
+            if (role.getName().equals(roleName)) {
+                return role.getId();
+            }
+        }
+        return -1L;
+    }
+
     public void addRole(Role role) {
         roles.add(role);
+    }
+
+    public void removeRole(Long roleId) {
+        Role roleForDelete = null;
+        for (Role role : roles
+        ) {
+            if (role.getId().equals(roleId)) {
+                roleForDelete = role;
+                break;
+            }
+        }
+        if (roleForDelete!=null){
+            roles.remove(roleForDelete);
+        }
     }
 }
