@@ -1,8 +1,6 @@
 package com.foodjou.fjapp.config;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -58,6 +56,9 @@ public class JwtService {
     }
 
     private Claims extractAllClaims(String token) {
+//        JwtParser jwtParser = Jwts.parserBuilder().setSigningKey(getSignInKey()).build();
+//        Jws<Claims> claimsJws = jwtParser.parseClaimsJws(token);
+//        return claimsJws.getBody();
         return Jwts
                 .parserBuilder()
                 .setSigningKey(getSignInKey())

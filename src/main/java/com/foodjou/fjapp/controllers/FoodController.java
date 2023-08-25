@@ -1,4 +1,4 @@
-package com.foodjou.fjapp.controllers.entityController;
+package com.foodjou.fjapp.controllers;
 
 import com.foodjou.fjapp.services.FoodService;
 
@@ -7,6 +7,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -19,6 +20,7 @@ public class FoodController {
     public FoodController(FoodService foodService) {
         this.foodService = foodService;
     }
+
 
     @PostMapping("")
     public ResponseEntity<String> addFood(@Valid @RequestBody FoodDTO foodDTO) {

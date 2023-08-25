@@ -1,4 +1,4 @@
-package com.foodjou.fjapp.controllers.entityController;
+package com.foodjou.fjapp.controllers;
 
 import com.foodjou.fjapp.dto.entityDTO.FoodDTO;
 import com.foodjou.fjapp.services.FoodService;
@@ -8,12 +8,14 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/restaurants")
+@PreAuthorize("hasRole('RESTAURANT_OWNER')")
 public class RestaurantController {
 
     private final RestaurantService restaurantService;

@@ -1,15 +1,16 @@
-package com.foodjou.fjapp.controllers.entityController;
+package com.foodjou.fjapp.controllers;
 
 import com.foodjou.fjapp.services.UserService;
 import com.foodjou.fjapp.dto.entityDTO.UserDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/users")
-
+@PreAuthorize("hasRole('USER')")
 public class UserController {
     private final UserService userService;
 

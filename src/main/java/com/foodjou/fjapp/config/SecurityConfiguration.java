@@ -27,8 +27,12 @@ public class SecurityConfiguration {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests((auth) -> auth.requestMatchers(new AntPathRequestMatcher("/api/v1/auth/**"))
-                        .permitAll()
+                .authorizeHttpRequests((auth) -> auth
+                        .requestMatchers(new AntPathRequestMatcher("/api/v1/auth/**")).permitAll()
+
+                        .requestMatchers(new AntPathRequestMatcher("/api/admins/**")).hasRole("ADMIN")
+                        .requestMatchers(new AntPathRequestMatcher("/api/users/**")).hasRole("USER")
+                        .requestMatchers(new AntPathRequestMatcher("/api/restaurants/**")).hasRole("RESTAURANT_OWNER")
                         .anyRequest()
                         .authenticated())
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
