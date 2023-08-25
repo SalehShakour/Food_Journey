@@ -21,7 +21,7 @@ public class GlobalExceptionHandler {
     // Add more exception handlers for other types of exceptions if needed
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<String> handleGenericException(MethodArgumentNotValidException ex) {
+    public ResponseEntity<String> handleGenericException(Exception ex) {
         return new ResponseEntity<>("An error occurred", HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

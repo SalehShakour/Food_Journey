@@ -1,25 +1,38 @@
 package com.foodjou.fjapp.domain;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.List;
-
+@Entity
 @Getter
 @Setter
-@Entity
-@Table(name = "roles", uniqueConstraints = {
-        @UniqueConstraint(columnNames = "role_name")
-})
+@Table(name = "roles")
 public class Role {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @GeneratedValue
     private Long id;
-    @Column(name = "role_name")
-    private String roleName;
-    @Column(name = "description")
-    private String description;
+    @Column(name = "role", nullable = false,unique = true, length = 50)
+    private String name;
+
+    public Role(Long id) {
+        super();
+        this.id = id;
+    }
+
+    public Role() {
+    }
+
+    public Role(String name) {
+        super();
+        this.name = name;
+    }
+
+    @Override
+    public String toString() {
+        return name;
+    }
 }

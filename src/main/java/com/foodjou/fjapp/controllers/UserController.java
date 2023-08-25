@@ -1,9 +1,11 @@
-package com.foodjou.fjapp.controllers.entityController;
+package com.foodjou.fjapp.controllers;
 
-import com.foodjou.fjapp.services.entityService.UserService;
+import com.foodjou.fjapp.services.UserService;
 import com.foodjou.fjapp.dto.entityDTO.UserDTO;
+import jakarta.annotation.security.RolesAllowed;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,7 +18,7 @@ public class UserController {
     public UserController(UserService userService) {
         this.userService = userService;
     }
-
+    @RolesAllowed("ROLE_ADMIN")
     @GetMapping("/{id}")
     public ResponseEntity<UserDTO> getUserById(@PathVariable String id) {
         UserDTO userDTO = userService.getUserById(id);

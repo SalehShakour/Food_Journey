@@ -1,8 +1,8 @@
-package com.foodjou.fjapp.controllers.entityController;
+package com.foodjou.fjapp.controllers;
 
 import com.foodjou.fjapp.dto.entityDTO.FoodDTO;
-import com.foodjou.fjapp.services.entityService.FoodService;
-import com.foodjou.fjapp.services.entityService.RestaurantService;
+import com.foodjou.fjapp.services.FoodService;
+import com.foodjou.fjapp.services.RestaurantService;
 import com.foodjou.fjapp.dto.entityDTO.RestaurantDTO;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
