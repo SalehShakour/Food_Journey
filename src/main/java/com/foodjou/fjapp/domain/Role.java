@@ -15,7 +15,7 @@ public class Role {
     @Id
     @GeneratedValue
     private Long id;
-    @Column(name = "role", nullable = false,unique = true, length = 50)
+    @Column(name = "role", nullable = false, length = 50)
     private String name;
 
     public Role(Long id) {

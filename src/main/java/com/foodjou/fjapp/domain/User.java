@@ -42,6 +42,7 @@ public class User implements UserDetails {
     @Column(name = "orders")
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Order> orders = new ArrayList<>();
+    private Long restaurantId = null;
 
 
     @Override
