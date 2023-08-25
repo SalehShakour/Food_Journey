@@ -26,13 +26,8 @@ public class User implements UserDetails {
     private Long id;
     @Column(name = "email")
     private String email;
-    @Column(name = "roles")
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinTable(
-            name = "user_roles",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id")
-    )
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id")
     private Set<Role> roles = new HashSet<>();
     @Column(name = "firstname")
     private String firstname;
