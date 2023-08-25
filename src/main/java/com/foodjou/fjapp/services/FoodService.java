@@ -27,8 +27,6 @@ public class FoodService {
     }
 
     public void addFood(Food food, Long restaurantId) {
-
-
         Restaurant restaurant = restaurantRepository.findById(restaurantId)
                 .orElseThrow(()->new CustomException("Restaurant not found by id"));
         food.setRestaurant(restaurant);
