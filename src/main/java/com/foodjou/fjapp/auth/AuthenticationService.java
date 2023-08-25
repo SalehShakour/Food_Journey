@@ -29,6 +29,7 @@ public class AuthenticationService {
                 .phoneNumber(request.getPhoneNumber())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .roles(request.getRoles())
+                .orders(request.getOrders())
                 .build();
 
         roleService.addRoleToUser(user, AvailableRole.ROLE_USER);

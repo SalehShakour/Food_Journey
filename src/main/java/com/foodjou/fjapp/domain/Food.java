@@ -20,6 +20,9 @@ public class Food {
     @Column(name = "description")
     private String description;
     @ManyToOne
-    @JoinColumn(name = "restaurant_id") // This refers to the foreign key in the Restaurant table
+    @JoinColumn(name = "restaurant_id")
     private Restaurant restaurant;
+    @ManyToOne
+    @JoinColumn(name = "order_id")
+    private Order order;
 }

@@ -1,6 +1,7 @@
 package com.foodjou.fjapp.auth;
 
 
+import com.foodjou.fjapp.domain.Order;
 import com.foodjou.fjapp.domain.Role;
 import com.foodjou.fjapp.repositories.RoleRepository;
 import lombok.AllArgsConstructor;
@@ -8,7 +9,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Data
@@ -24,4 +27,5 @@ public class RegisterRequest {
     private String phoneNumber;
     private String address;
     private Set<Role> roles = new HashSet<>();
+    private List<Order> orders = new ArrayList<>();
 }

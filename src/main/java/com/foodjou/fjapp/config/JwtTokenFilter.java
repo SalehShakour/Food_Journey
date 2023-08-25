@@ -79,27 +79,10 @@ public class JwtTokenFilter extends OncePerRequestFilter {
     }
 
     private UserDetails getUserDetails(String token) {
-        User userDetails = new User();
+        User userDetails;
         Claims claims = jwtService.parseClaims(token);
         String subject = (String) claims.get(Claims.SUBJECT);
         userDetails = userRepository.findByEmail(subject).orElseThrow(()-> new CustomException("User not found"));
-//        String roles = (String) claims.get("roles");
-//        String id = (String) claims.get(Claims.ID);
-
-//        System.out.println("SUBJECT: " + subject);
-//        System.out.println("roles: " + roles);
-//        roles = roles.replace("[", "").replace("]", "");
-//        String[] roleNames = roles.split(",");
-
-//        for (String aRoleName : roleNames) {
-//            userDetails.addRole(new Role(aRoleName));
-//        }
-
-//        String[] jwtSubject = subject.split(",");
-//
-//        userDetails.setId(Long.valueOf(id));
-//        userDetails.setEmail(subject);
-
         return userDetails;
     }
 }
