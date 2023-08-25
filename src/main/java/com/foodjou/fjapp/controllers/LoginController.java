@@ -1,6 +1,6 @@
 package com.foodjou.fjapp.controllers;
 
-import com.foodjou.fjapp.services.entityService.UserService;
+import com.foodjou.fjapp.services.UserService;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 

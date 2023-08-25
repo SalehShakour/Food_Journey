@@ -1,4 +1,4 @@
-package com.foodjou.fjapp.services.entityService;
+package com.foodjou.fjapp.services;
 import com.foodjou.fjapp.domain.Food;
 import com.foodjou.fjapp.exception.CustomException;
 import com.foodjou.fjapp.mapper.entityMapper.MapStructFood;

@@ -1,8 +1,7 @@
 package com.foodjou.fjapp.domain;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -14,6 +13,9 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "users", uniqueConstraints = {
         @UniqueConstraint(columnNames = "email")
 })
@@ -22,8 +24,10 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
-    @Column(name = "address")
-    private String address;
+    @Column(name = "email")
+    private String email;
+    @Enumerated(EnumType.STRING)
+    private Role role;
     @Column(name = "firstname")
     private String firstname;
     @Column(name = "lastname")
@@ -32,19 +36,22 @@ public class User implements UserDetails {
     private String password;
     @Column(name = "phone_number")
     private String phoneNumber;
-    @Column(name = "email")
-    private String email;
-    @ManyToOne
-    private Role role;
+    @Column(name = "address")
+    private String address;
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(role.getRoleName()));
+        return List.of(new SimpleGrantedAuthority(role.name()));
+    }
+
+    @Override
+    public String getPassword() {
+        return password;
     }
 
     @Override
     public String getUsername() {
-        // email in our case
         return email;
     }
 
@@ -67,4 +74,5 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
 }

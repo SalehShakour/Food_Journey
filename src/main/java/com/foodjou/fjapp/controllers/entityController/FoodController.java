@@ -1,6 +1,6 @@
 package com.foodjou.fjapp.controllers.entityController;
 
-import com.foodjou.fjapp.services.entityService.FoodService;
+import com.foodjou.fjapp.services.FoodService;
 
 import com.foodjou.fjapp.dto.entityDTO.FoodDTO;
 import jakarta.validation.Valid;

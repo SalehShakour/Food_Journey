@@ -1,6 +1,6 @@
 package com.foodjou.fjapp.controllers.entityController;
 
-import com.foodjou.fjapp.services.entityService.UserService;
+import com.foodjou.fjapp.services.UserService;
 import com.foodjou.fjapp.dto.entityDTO.UserDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
