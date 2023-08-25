@@ -1,9 +1,10 @@
 package com.foodjou.fjapp.auth;
 
 import com.foodjou.fjapp.config.JwtService;
-import com.foodjou.fjapp.domain.Role;
 import com.foodjou.fjapp.domain.User;
 import com.foodjou.fjapp.repositories.UserRepository;
+import com.foodjou.fjapp.services.AvailableRole;
+import com.foodjou.fjapp.services.RoleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class AuthenticationService {
     private final UserRepository userRepository;
+    private final RoleService roleService;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
@@ -29,6 +31,7 @@ public class AuthenticationService {
                 .roles(request.getRoles())
                 .build();
 
+        roleService.addRoleToUser(user, AvailableRole.ROLE_USER);
         userRepository.save(user);
         var jwtToken = jwtService.generateToken(user);
         return AuthenticationResponse.builder()

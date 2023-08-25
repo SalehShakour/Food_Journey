@@ -30,6 +30,8 @@ public class Role {
         super();
         this.name = name;
     }
+    @ManyToOne
+    private User user;
 
     @Override
     public String toString() {
