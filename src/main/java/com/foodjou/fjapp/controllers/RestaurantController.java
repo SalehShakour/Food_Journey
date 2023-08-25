@@ -1,4 +1,4 @@
-package com.foodjou.fjapp.controllers.entityController;
+package com.foodjou.fjapp.controllers;
 
 import com.foodjou.fjapp.dto.entityDTO.FoodDTO;
 import com.foodjou.fjapp.services.FoodService;

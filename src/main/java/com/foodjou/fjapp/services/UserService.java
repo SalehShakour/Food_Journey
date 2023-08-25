@@ -23,11 +23,6 @@ public class UserService {
         this.mapStructUser = mapStructUser;
     }
 
-    public void signUpUser(SignUpRequestDTO signUpRequestDTO) {
-        User user = mapStructSignup.signupDtoToUser(signUpRequestDTO);
-        userRepository.save(user);
-    }
-
     public UserDTO getUserById(String id) {
         User user = userRepository.findById(Long.valueOf(id)).orElseThrow(() -> new CustomException("User not found"));
         return mapStructUser.userToUserDTO(user);

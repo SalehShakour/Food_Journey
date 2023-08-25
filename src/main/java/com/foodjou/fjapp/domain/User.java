@@ -2,12 +2,12 @@ package com.foodjou.fjapp.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.ManyToAny;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 
 @Getter
@@ -26,8 +26,14 @@ public class User implements UserDetails {
     private Long id;
     @Column(name = "email")
     private String email;
-    @Enumerated(EnumType.STRING)
-    private Role role;
+    @Column(name = "roles")
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "user_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
+    private Set<Role> roles = new HashSet<>();
     @Column(name = "firstname")
     private String firstname;
     @Column(name = "lastname")
@@ -42,7 +48,11 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(role.name()));
+        List<SimpleGrantedAuthority> authorities = new ArrayList<>();
+        for (Role role: roles){
+            authorities.add(new SimpleGrantedAuthority(role.getName()));
+        }
+        return authorities;
     }
 
     @Override
@@ -75,4 +85,7 @@ public class User implements UserDetails {
         return true;
     }
 
+    public void addRole(Role role) {
+        roles.add(role);
+    }
 }
