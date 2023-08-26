@@ -11,14 +11,13 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/users")
-
+@RolesAllowed({"ROLE_ADMIN","ROLE_SUPER_ADMIN"})
 public class UserController {
     private final UserService userService;
 
     public UserController(UserService userService) {
         this.userService = userService;
     }
-    @RolesAllowed("ROLE_ADMIN")
     @GetMapping("/{id}")
     public ResponseEntity<UserDTO> getUserById(@PathVariable String id) {
         UserDTO userDTO = userService.getUserById(id);
