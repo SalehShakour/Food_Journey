@@ -36,6 +36,8 @@ public class RestaurantService {
         Restaurant restaurant = mapStructRestaurant.restaurantDtoToRestaurant(restaurantDTO);
         restaurant.setOwner(user);
         restaurantRepository.save(restaurant);
+        user.setRestaurantId(restaurant.getId());
+        userRepository.save(user);
     }
 
     public RestaurantDTO getRestaurant(String id) {

@@ -30,7 +30,6 @@ public class SecurityConfiguration {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((auth) -> auth.requestMatchers(new AntPathRequestMatcher("/api/v1/auth/**"))
                         .permitAll()
-//                        .requestMatchers(new AntPathRequestMatcher("/api/users/**")).authenticated()
                         .anyRequest()
                         .authenticated())
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
