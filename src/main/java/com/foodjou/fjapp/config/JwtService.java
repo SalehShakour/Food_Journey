@@ -7,7 +7,6 @@ import io.jsonwebtoken.security.Keys;
 import org.slf4j.Logger;
 
 import org.slf4j.LoggerFactory;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.security.Key;
@@ -23,7 +22,7 @@ public class JwtService {
     public String generateToken(User user) {
         return Jwts
                 .builder()
-                .claim("roles",user.getRoles().toString())
+                .claim("roles", user.getRoles().toString())
                 .setSubject(user.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 24))
@@ -35,9 +34,6 @@ public class JwtService {
     private Key getSignInKey() {
         byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
         return Keys.hmacShaKeyFor(keyBytes);
-    }
-    public String getSubject(String token) {
-        return parseClaims(token).getSubject();
     }
 
     public Claims parseClaims(String token) {
