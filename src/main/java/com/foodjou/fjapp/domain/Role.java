@@ -18,13 +18,7 @@ public class Role {
     @Column(name = "role", nullable = false, length = 50)
     private String name;
 
-    public Role(Long id) {
-        super();
-        this.id = id;
-    }
-
-    public Role() {
-    }
+    public Role() {}
 
     public Role(String name) {
         super();

@@ -25,7 +25,8 @@ public class RestaurantController {
     private final FoodService foodService;
 
     @Autowired
-    public RestaurantController(RestaurantService restaurantService, FoodService foodService) {
+    public RestaurantController(RestaurantService restaurantService,
+                                FoodService foodService) {
         this.restaurantService = restaurantService;
         this.foodService = foodService;
     }
@@ -51,7 +52,8 @@ public class RestaurantController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<String> updateRestaurantById(@PathVariable String id,@Valid @RequestBody RestaurantDTO updatedRestaurantDTO) {
+    public ResponseEntity<String> updateRestaurantById(@PathVariable String id,
+                                                       @Valid @RequestBody RestaurantDTO updatedRestaurantDTO) {
         restaurantService.updateRestaurant(id, updatedRestaurantDTO);
         return ResponseEntity.status(HttpStatus.OK).body("Restaurant updated successfully");
     }

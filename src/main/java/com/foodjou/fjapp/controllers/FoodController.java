@@ -35,14 +35,14 @@ public class FoodController {
     public ResponseEntity<String> addFood(@Valid @RequestBody Food food) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Long userId = ((User) authentication.getPrincipal()).getId();
-        Long restaurantId = userRepository.findById(userId).
-                orElseThrow(()->new CustomException("User id not found (for get restaurantID)"))
+        Long restaurantId = userRepository.findById(userId)
+                .orElseThrow(() -> new CustomException("User id not found (for get restaurantID)"))
                 .getRestaurantId();
-        if (restaurantId == null){
+        if (restaurantId == null) {
             throw new CustomException("You have restaurant owner role, but have not any restaurant :)");
         }
 
-        foodService.addFood(food,restaurantId);
+        foodService.addFood(food, restaurantId);
         return ResponseEntity.status(HttpStatus.CREATED).body("Food created successfully");
     }
 
@@ -60,7 +60,8 @@ public class FoodController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<String> updateFoodById(@PathVariable String id, @Valid @RequestBody FoodDTO updatedFoodDTO) {
+    public ResponseEntity<String> updateFoodById(@PathVariable String id,
+                                                 @Valid @RequestBody FoodDTO updatedFoodDTO) {
         foodService.updateFoodById(id, updatedFoodDTO);
         return ResponseEntity.status(HttpStatus.OK).body("Food updated successfully");
     }

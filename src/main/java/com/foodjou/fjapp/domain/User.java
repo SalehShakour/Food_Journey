@@ -93,7 +93,8 @@ public class User implements UserDetails {
         }
         return false;
     }
-    public Long getRoleId(String roleName){
+
+    public Long getRoleId(String roleName) {
         for (Role role : roles
         ) {
             if (role.getName().equals(roleName)) {
@@ -109,14 +110,13 @@ public class User implements UserDetails {
 
     public void removeRole(Long roleId) {
         Role roleForDelete = null;
-        for (Role role : roles
-        ) {
+        for (Role role : roles) {
             if (role.getId().equals(roleId)) {
                 roleForDelete = role;
                 break;
             }
         }
-        if (roleForDelete!=null){
+        if (roleForDelete != null) {
             roles.remove(roleForDelete);
         }
     }

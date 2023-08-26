@@ -13,23 +13,24 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserService {
     private final UserRepository userRepository;
-    private final MapStructSignup mapStructSignup;
     private final MapStructUser mapStructUser;
 
     @Autowired
-    public UserService(UserRepository userRepository, MapStructSignup mapStructSignup, MapStructUser mapStructUser) {
+    public UserService(UserRepository userRepository,
+                       MapStructUser mapStructUser) {
         this.userRepository = userRepository;
-        this.mapStructSignup = mapStructSignup;
         this.mapStructUser = mapStructUser;
     }
 
     public UserDTO getUserById(String id) {
-        User user = userRepository.findById(Long.valueOf(id)).orElseThrow(() -> new CustomException("User not found"));
+        User user = userRepository.findById(Long.valueOf(id))
+                .orElseThrow(() -> new CustomException("User not found"));
         return mapStructUser.userToUserDTO(user);
     }
 
     public void deleteUserById(String id) {
-        User user = userRepository.findById(Long.valueOf(id)).orElseThrow(() -> new CustomException("User not found"));
+        User user = userRepository.findById(Long.valueOf(id))
+                .orElseThrow(() -> new CustomException("User not found"));
         userRepository.delete(user);
     }
 

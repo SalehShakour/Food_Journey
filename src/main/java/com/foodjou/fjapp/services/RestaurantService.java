@@ -21,18 +21,17 @@ import java.util.List;
 public class RestaurantService {
     private final RestaurantRepository restaurantRepository;
     private final MapStructRestaurant mapStructRestaurant;
-    private final MapStructFood mapStructFood;
     private final UserRepository userRepository;
     @Autowired
     public RestaurantService(RestaurantRepository restaurantRepository, MapStructRestaurant mapStructRestaurant, MapStructFood mapStructFood, UserRepository userRepository) {
         this.restaurantRepository = restaurantRepository;
         this.mapStructRestaurant = mapStructRestaurant;
-        this.mapStructFood = mapStructFood;
         this.userRepository = userRepository;
     }
 
     public void addRestaurant(String userId, RestaurantDTO restaurantDTO) {
-        User user = userRepository.findById(Long.valueOf(userId)).orElseThrow(() -> new CustomException("User not found"));
+        User user = userRepository.findById(Long.valueOf(userId))
+                .orElseThrow(() -> new CustomException("User not found"));
         Restaurant restaurant = mapStructRestaurant.restaurantDtoToRestaurant(restaurantDTO);
         restaurant.setOwner(user);
         restaurantRepository.save(restaurant);
@@ -41,7 +40,8 @@ public class RestaurantService {
     }
 
     public RestaurantDTO getRestaurant(String id) {
-        Restaurant restaurant = restaurantRepository.findById(Long.valueOf(id)).orElseThrow(() -> new CustomException("Restaurant not found"));
+        Restaurant restaurant = restaurantRepository.findById(Long.valueOf(id))
+                .orElseThrow(() -> new CustomException("Restaurant not found"));
         return mapStructRestaurant.restaurantToRestaurantDTO(restaurant);
     }
 
@@ -68,15 +68,4 @@ public class RestaurantService {
 
         return menuDTO.result();
     }
-
-//    public void addFoodToMenu(String id, FoodDTO foodDTO) {
-//        Restaurant restaurant = restaurantRepository.findById(Long.valueOf(id))
-//                .orElseThrow(() -> new CustomException("Restaurant not found"));
-//
-//        List<Food> tempFoodList = restaurant.getFoods();
-//        tempFoodList.add(mapStructFood.foodDtoToFood(foodDTO));
-//        restaurant.setFoods(tempFoodList);
-//        restaurantRepository.save(restaurant);
-//    }
-
 }
