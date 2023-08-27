@@ -10,8 +10,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -32,10 +31,10 @@ public class RestaurantController {
     }
 
     @PostMapping("/addRestaurant")
-    public ResponseEntity<String> addRestaurant(@Valid @RequestBody RestaurantDTO restaurantDTO) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Long userId = ((User) authentication.getPrincipal()).getId();
-        restaurantService.addRestaurant(String.valueOf(userId), restaurantDTO);
+    public ResponseEntity<String> addRestaurant(@Valid @RequestBody RestaurantDTO restaurantDTO,
+                                                @AuthenticationPrincipal User currentUser) {
+        System.out.println(currentUser.getId());
+        restaurantService.addRestaurant(currentUser, restaurantDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body("Restaurant created successfully");
     }
 

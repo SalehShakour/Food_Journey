@@ -19,7 +19,7 @@ public class Order {
     @JoinColumn(name = "order_id")
     private User user;
 
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+    @ManyToMany(mappedBy = "orders")
     private List<Food> foods = new ArrayList<>();
 
 }

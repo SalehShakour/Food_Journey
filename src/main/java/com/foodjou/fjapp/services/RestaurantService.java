@@ -29,14 +29,12 @@ public class RestaurantService {
         this.userRepository = userRepository;
     }
 
-    public void addRestaurant(String userId, RestaurantDTO restaurantDTO) {
-        User user = userRepository.findById(Long.valueOf(userId))
-                .orElseThrow(() -> new CustomException("User not found"));
+    public void addRestaurant(User owner, RestaurantDTO restaurantDTO) {
         Restaurant restaurant = mapStructRestaurant.restaurantDtoToRestaurant(restaurantDTO);
-        restaurant.setOwner(user);
+        restaurant.setOwner(owner);
         restaurantRepository.save(restaurant);
-        user.setRestaurantId(restaurant.getId());
-        userRepository.save(user);
+        owner.setRestaurantId(restaurant.getId());
+        userRepository.save(owner);
     }
 
     public RestaurantDTO getRestaurant(String id) {
