@@ -22,7 +22,7 @@ public class RoleService {
 
     public void addRoleToUser(User user, AvailableRole role) {
         if (!user.hasRole(role.name())){
-            Role newRole = new Role(role.name());
+            Role newRole = Role.builder().name(role.name()).build();
             roleRepository.save(newRole);
             user.addRole(newRole);
             userRepository.save(user);
