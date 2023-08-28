@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/order")
 public class OrderController {
 
-    @PostMapping("/")
+    @PostMapping
     public ResponseEntity<String> createOrder(@AuthenticationPrincipal User currentUser){
         //todo
         return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body("This feature not ready to use");

@@ -6,24 +6,21 @@ import com.foodjou.fjapp.mapper.entityMapper.MapStructFood;
 import com.foodjou.fjapp.repositories.FoodRepository;
 import com.foodjou.fjapp.dto.entityDTO.FoodDTO;
 import com.foodjou.fjapp.repositories.RestaurantRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@AllArgsConstructor
 public class FoodService {
     private final FoodRepository foodRepository;
     private final MapStructFood mapStructFood;
     private final RestaurantRepository restaurantRepository;
 
-    @Autowired
-    public FoodService(FoodRepository foodRepository,
-                       MapStructFood mapStructFood,
-                       RestaurantRepository restaurantRepository) {
-        this.foodRepository = foodRepository;
-        this.mapStructFood = mapStructFood;
-        this.restaurantRepository = restaurantRepository;
+    public Food foodValidation(String id){
+        return foodRepository.findById(Long.valueOf(id))
+                .orElseThrow(()->new CustomException("food Not found"));
     }
 
     public void addFood(Food food, Long restaurantId) {
@@ -38,20 +35,16 @@ public class FoodService {
     }
 
     public FoodDTO getFoodById(String id) {
-        Food food = foodRepository.findById(Long.valueOf(id))
-                .orElseThrow(()->new CustomException("Not found food"));
+        Food food = foodValidation(id);
         return mapStructFood.foodToFoodDTO(food);
     }
 
     public void deleteFoodById(String id) {
-        Food food = foodRepository.findById(Long.valueOf(id))
-                .orElseThrow(() -> new CustomException("Restaurant not found"));
-        foodRepository.delete(food);
+        foodRepository.delete(foodValidation(id));
     }
 
     public void updateFoodById(String id, FoodDTO updatedFoodDTO) {
-        Food existingFood = foodRepository.findById(Long.valueOf(id))
-                .orElseThrow(() -> new CustomException("Food not found"));
+        Food existingFood = foodValidation(id);
         existingFood = mapStructFood.updateFoodDtoToFood(updatedFoodDTO,existingFood);
         foodRepository.save(existingFood);
 

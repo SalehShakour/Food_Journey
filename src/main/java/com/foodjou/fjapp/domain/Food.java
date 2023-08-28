@@ -26,6 +26,4 @@ public class Food {
     private Restaurant restaurant;
     @OneToMany(mappedBy = "food", cascade = CascadeType.ALL)
     private List<FoodOrder> foodOrder;
-
-
 }

@@ -30,7 +30,7 @@ public class RestaurantController {
         this.foodService = foodService;
     }
 
-    @PostMapping("/addRestaurant")
+    @PostMapping
     public ResponseEntity<String> addRestaurant(@Valid @RequestBody RestaurantDTO restaurantDTO,
                                                 @AuthenticationPrincipal User currentUser) {
         System.out.println(currentUser.getId());
