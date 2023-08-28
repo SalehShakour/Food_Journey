@@ -15,7 +15,7 @@ public class Role {
     @Id
     @GeneratedValue
     private Long id;
-    @Column(name = "role", nullable = false, length = 50)
+    @Column(name = "name", nullable = false, length = 50)
     private String name;
 
     @ManyToOne
