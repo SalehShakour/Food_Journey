@@ -49,11 +49,11 @@ public class RestaurantService {
         restaurantRepository.save(existingRestaurant);
     }
 
-    public List<FoodDTO> getMenu(String id) {
+    public List<Food> getMenu(String id) {
         Restaurant restaurant = restaurantValidation(id);
         List<Food> foodList = restaurant.getFoods();
         List<FoodDTO> foodDTOList = MapStructMenu.INSTANCE.foodsToFoodDTOs(foodList);
-        MenuDTO menuDTO = new MenuDTO(foodDTOList);
+        MenuDTO menuDTO = new MenuDTO(foodList);
 
         return menuDTO.result();
     }

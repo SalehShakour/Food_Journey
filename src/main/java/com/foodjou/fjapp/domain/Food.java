@@ -24,6 +24,6 @@ public class Food {
     @ManyToOne
     @JoinColumn(name = "restaurant_id")
     private Restaurant restaurant;
-    @OneToMany(mappedBy = "food", cascade = CascadeType.ALL)
-    private List<FoodOrder> foodOrder;
+//    @OneToMany(mappedBy = "food", cascade = CascadeType.ALL)
+//    private List<FoodOrder> foodOrder;
 }

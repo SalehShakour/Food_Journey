@@ -1,5 +1,6 @@
 package com.foodjou.fjapp.controllers;
 
+import com.foodjou.fjapp.domain.Food;
 import com.foodjou.fjapp.domain.User;
 import com.foodjou.fjapp.dto.entityDTO.FoodDTO;
 import com.foodjou.fjapp.services.FoodService;
@@ -58,7 +59,7 @@ public class RestaurantController {
     }
 
     @GetMapping("/{id}/menu")
-    public ResponseEntity<List<FoodDTO>> getRestaurantMenuById(@PathVariable String id) {
+    public ResponseEntity<List<Food>> getRestaurantMenuById(@PathVariable String id) {
         return ResponseEntity.status(HttpStatus.OK).body(restaurantService.getMenu(id));
     }
 }

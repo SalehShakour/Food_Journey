@@ -12,12 +12,15 @@ import lombok.*;
 @NoArgsConstructor
 public class FoodOrder {
     @Id
+    @GeneratedValue
     private Long id;
     @ManyToOne
-    @JoinColumn(name = "food_id",nullable = false)
+    @JoinColumn(name = "food_id")
     private Food food;
-    @ManyToOne
-    @JoinColumn(name = "order_id",nullable = false)
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "order_id")
     private Order order;
+    @Column(name = "quantity")
+    private int quantity;
 
 }
