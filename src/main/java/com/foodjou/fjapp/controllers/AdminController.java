@@ -11,7 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/admin")
+@RequestMapping("/api")
 public class AdminController {
     private final RoleService roleService;
     private final UserRepository userRepository;
@@ -22,7 +22,7 @@ public class AdminController {
         this.userRepository = userRepository;
     }
 
-    @PutMapping("/addAdminRole/{userId}")
+    @PutMapping("/admin/add/{userId}")
     @RolesAllowed("ROLE_SUPER_ADMIN")
     public ResponseEntity<String> addAdminRole(@PathVariable String userId){
         User user = userRepository.findById(Long.valueOf(userId))
@@ -31,7 +31,7 @@ public class AdminController {
         return ResponseEntity.status(HttpStatus.OK).body(user.getRoles().toString());
     }
 
-    @PutMapping("/removeAdminRole/{userId}")
+    @PutMapping("/admin/remove/{userId}")
     @RolesAllowed("ROLE_SUPER_ADMIN")
     public ResponseEntity<String> removeAdminRole(@PathVariable String userId){
         User user = userRepository.findById(Long.valueOf(userId))
@@ -40,7 +40,7 @@ public class AdminController {
         return ResponseEntity.status(HttpStatus.OK).body(user.getRoles().toString());
     }
 
-    @PutMapping("/addRestaurantOwnerRole/{userId}")
+    @PutMapping("/owner/add/{userId}")
     @RolesAllowed({"ROLE_SUPER_ADMIN","ROLE_ADMIN"})
     public ResponseEntity<String> addRestaurantOwnerRole(@PathVariable String userId){
         User user = userRepository.findById(Long.valueOf(userId))
@@ -49,7 +49,7 @@ public class AdminController {
         return ResponseEntity.status(HttpStatus.OK).body(user.getRoles().toString());
     }
 
-    @PutMapping("/removeRestaurantOwnerRole/{userId}")
+    @PutMapping("/owner/remove/{userId}")
     @RolesAllowed({"ROLE_SUPER_ADMIN","ROLE_ADMIN"})
     public ResponseEntity<String> removeRestaurantOwnerRole(@PathVariable String userId){
         User user = userRepository.findById(Long.valueOf(userId))

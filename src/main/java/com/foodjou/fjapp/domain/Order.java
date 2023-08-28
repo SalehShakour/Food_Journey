@@ -1,8 +1,7 @@
 package com.foodjou.fjapp.domain;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,14 +11,18 @@ import java.util.List;
 @Setter
 @Entity
 @Table(name = "orders")
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Order {
     @Id
+    @GeneratedValue
     private Long id;
     @ManyToOne
-    @JoinColumn(name = "order_id")
+    @JoinColumn(name = "user_id")
     private User user;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
-    private List<Food> foods = new ArrayList<>();
+    private List<FoodOrder> foodOrders = new ArrayList<>();
 
 }

@@ -4,6 +4,8 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
 @Entity
@@ -22,7 +24,6 @@ public class Food {
     @ManyToOne
     @JoinColumn(name = "restaurant_id")
     private Restaurant restaurant;
-    @ManyToOne
-    @JoinColumn(name = "order_id")
-    private Order order;
+//    @OneToMany(mappedBy = "food", cascade = CascadeType.ALL)
+//    private List<FoodOrder> foodOrder;
 }

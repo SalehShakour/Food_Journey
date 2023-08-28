@@ -1,29 +1,23 @@
 package com.foodjou.fjapp.domain;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
 @Getter
 @Setter
 @Table(name = "roles")
+@NoArgsConstructor
+@Builder
+@AllArgsConstructor
 public class Role {
 
     @Id
     @GeneratedValue
     private Long id;
-    @Column(name = "role", nullable = false, length = 50)
+    @Column(name = "name", nullable = false, length = 50)
     private String name;
 
-    public Role() {}
-
-    public Role(String name) {
-        super();
-        this.name = name;
-    }
     @ManyToOne
     private User user;
 

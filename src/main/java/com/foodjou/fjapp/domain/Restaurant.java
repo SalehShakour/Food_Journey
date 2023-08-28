@@ -26,7 +26,7 @@ public class Restaurant {
     private String phoneNumber;
 
     @ManyToOne
-    @JoinColumn(name = "owner_id") // This is the foreign key column in the Food table
+    @JoinColumn(name = "owner_id")
     private User owner;
 
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL)
