@@ -128,7 +128,7 @@ public class User implements UserDetails {
         return "User{" +
                 "id=" + id +
                 ", email='" + email + '\'' +
-                ", roles=" + roles +
+                ", roles=" + roles.toString() +
                 ", firstname='" + firstname + '\'' +
                 ", lastname='" + lastname + '\'' +
                 ", phoneNumber='" + phoneNumber + '\'' +

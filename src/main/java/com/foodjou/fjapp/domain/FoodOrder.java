@@ -31,10 +31,9 @@ public class FoodOrder {
     public String toString() {
         return "FoodOrder{" +
                 "id=" + id +
-                ", food=" + food +
-                ", order=" + order +
+                ", food=" + food.getFoodName() +
+                ", order=" + order.getId() +
                 ", quantity=" + quantity +
-                ", date time='" + new Date() +
                 ", date time='" + new Date() +
                 '}';
     }

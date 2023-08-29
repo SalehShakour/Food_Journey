@@ -8,6 +8,8 @@ import com.foodjou.fjapp.repositories.FoodOrderRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @AllArgsConstructor
 public class FoodOrderService {
@@ -38,6 +40,10 @@ public class FoodOrderService {
 
     public void deleteFoodOrder(String id) {
         foodOrderRepository.delete(foodOrderValidation(id));
+    }
+
+    public List<String> getFoodOrdersByRestaurantId(Long restaurantId) {
+        return foodOrderRepository.findDistinctFoodNamesByRestaurantId(restaurantId);
     }
 }
 

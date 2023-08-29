@@ -33,7 +33,6 @@ public class Order {
         return "Order{" +
                 "id=" + id +
                 ", user=" + user +
-                ", foodOrders=" + foodOrders +
                 ", date time='" + new Date() +
                 '}';
     }
