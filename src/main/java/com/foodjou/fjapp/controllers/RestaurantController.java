@@ -63,12 +63,13 @@ public class RestaurantController {
     public ResponseEntity<List<Food>> getRestaurantMenuById(@PathVariable String id) {
         return ResponseEntity.status(HttpStatus.OK).body(restaurantService.getMenu(id));
     }
-    @Transactional
     @GetMapping("/{id}/orders")
-    public ResponseEntity<List<String>> getAllOrder(@PathVariable String id){
-        return ResponseEntity.status(HttpStatus.OK).body(
-                foodOrderService.getFoodOrdersByRestaurantId(Long.valueOf(id))
-        );
-
+    public ResponseEntity<List<String>> getAllOrder(@PathVariable String id,
+                                                    @AuthenticationPrincipal User currentUser){
+        if (currentUser.getRestaurantId() != null && currentUser.getRestaurantId().equals(Long.valueOf(id))){
+            return ResponseEntity.status(HttpStatus.OK).body(
+                    foodOrderService.getFoodOrdersByRestaurantId(Long.valueOf(id)));
+        }
+        return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).build();
     }
 }
