@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 
@@ -33,6 +34,7 @@ public class Order {
                 "id=" + id +
                 ", user=" + user +
                 ", foodOrders=" + foodOrders +
+                ", date time='" + new Date() +
                 '}';
     }
 

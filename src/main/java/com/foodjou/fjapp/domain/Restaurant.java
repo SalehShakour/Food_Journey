@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 
@@ -41,6 +42,7 @@ public class Restaurant {
                 ", restaurantName='" + restaurantName + '\'' +
                 ", address='" + address + '\'' +
                 ", phoneNumber='" + phoneNumber + '\'' +
+                ", date time='" + new Date() +
                 '}';
     }
 }

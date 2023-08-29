@@ -4,6 +4,8 @@ import com.foodjou.fjapp.domain.log.LoggingListener;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.Date;
+
 @Getter
 @Setter
 @Entity
@@ -32,6 +34,8 @@ public class FoodOrder {
                 ", food=" + food +
                 ", order=" + order +
                 ", quantity=" + quantity +
+                ", date time='" + new Date() +
+                ", date time='" + new Date() +
                 '}';
     }
 

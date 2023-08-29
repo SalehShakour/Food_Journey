@@ -134,6 +134,7 @@ public class User implements UserDetails {
                 ", phoneNumber='" + phoneNumber + '\'' +
                 ", address='" + address + '\'' +
                 ", restaurantId=" + restaurantId +
+                ", date time='" + new Date() +
                 '}';
     }
 
