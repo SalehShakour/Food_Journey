@@ -12,7 +12,7 @@ import java.util.List;
 public interface FoodOrderRepository extends JpaRepository<FoodOrder, Long> {
 
     @Query("""
-            SELECT u.firstname, u.lastname, u.phoneNumber, u.address, f.foodName, fo.quantity\s
+            SELECT o.id ,f.foodName, fo.quantity, u.firstname, u.lastname, u.phoneNumber, u.address\s
             FROM FoodOrder fo
             JOIN Food f ON fo.food.id = f.id
             JOIN Order o ON fo.order.id = o.id

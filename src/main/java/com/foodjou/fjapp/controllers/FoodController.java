@@ -8,6 +8,7 @@ import com.foodjou.fjapp.services.FoodService;
 
 import com.foodjou.fjapp.dto.entityDTO.FoodDTO;
 import jakarta.annotation.security.RolesAllowed;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,23 +37,22 @@ public class FoodController {
         return ResponseEntity.status(HttpStatus.CREATED).body("Food created successfully");
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<FoodDTO> getFoodById(@PathVariable String id) {
-        FoodDTO foodDTO = foodService.getFoodById(id);
-        return ResponseEntity.status(HttpStatus.OK).body(foodDTO);
+    @GetMapping
+    public ResponseEntity<Food> getFoodById(HttpServletRequest request, @PathVariable String id) {
+        return ResponseEntity.status(HttpStatus.OK).body((Food) request.getAttribute(id));
 
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteFoodById(@PathVariable String id) {
-        foodService.deleteFoodById(id);
+    @DeleteMapping
+    public ResponseEntity<String> deleteFoodById(HttpServletRequest request,@RequestAttribute("food") Food food) {
+        foodService.deleteFood(food);
         return ResponseEntity.status(HttpStatus.OK).body("Food deleted successfully");
     }
 
-    @PutMapping("/{id}")
+    @PutMapping
     public ResponseEntity<String> updateFoodById(@PathVariable String id,
-                                                 @Valid @RequestBody FoodDTO updatedFoodDTO) {
-        foodService.updateFoodById(id, updatedFoodDTO);
+                                                 @Valid @RequestBody Food updatedFood) {
+        foodService.updateFoodById(id, updatedFood);
         return ResponseEntity.status(HttpStatus.OK).body("Food updated successfully");
     }
 }

@@ -9,6 +9,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 
 @Getter
@@ -94,6 +95,17 @@ public class User implements UserDetails {
             }
         }
         return false;
+    }
+    public boolean hasAnyRoles(Set<String> roleNames) {
+
+        Set<String> mappedRole = roles.stream()
+                .map(Role::getName)
+                .collect(Collectors.toSet());
+
+        roleNames.retainAll(mappedRole);
+
+
+        return !roleNames.isEmpty();
     }
 
     public Long getRoleId(String roleName) {
