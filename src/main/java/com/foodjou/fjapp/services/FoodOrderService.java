@@ -8,6 +8,7 @@ import com.foodjou.fjapp.repositories.FoodOrderRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -43,7 +44,10 @@ public class FoodOrderService {
     }
 
     public List<String> getFoodOrdersByRestaurantId(Long restaurantId) {
-        return foodOrderRepository.findDistinctFoodNamesByRestaurantId(restaurantId);
+        List<String> result = foodOrderRepository.findDistinctFoodNamesByRestaurantId(restaurantId);
+        if (result != null) return result;
+        return new ArrayList<>();
+
     }
 }
 
