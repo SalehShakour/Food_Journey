@@ -1,5 +1,6 @@
 package com.foodjou.fjapp.services;
 
+import com.foodjou.fjapp.domain.Order;
 import com.foodjou.fjapp.domain.User;
 import com.foodjou.fjapp.mapper.entityMapper.MapStructUser;
 import com.foodjou.fjapp.repositories.UserRepository;
@@ -14,23 +15,26 @@ public class UserService {
     private final UserRepository userRepository;
     private final MapStructUser mapStructUser;
 
-    public UserDTO getUserById(String id) {
-        User user = userRepository.findById(Long.valueOf(id))
+    public User userValidation(String id) {
+        return userRepository.findById(Long.valueOf(id))
                 .orElseThrow(() -> new CustomException("User not found"));
-        return mapStructUser.userToUserDTO(user);
+    }
+
+    public UserDTO getUserById(String id) {
+        return mapStructUser.userToUserDTO(userValidation(id));
     }
 
     public void deleteUserById(String id) {
-        User user = userRepository.findById(Long.valueOf(id))
-                .orElseThrow(() -> new CustomException("User not found"));
-        userRepository.delete(user);
+        userRepository.delete(userValidation(id));
     }
 
     public void updateUserById(String id, UserDTO updatedUserDTO) {
-        User existingUser = userRepository.findById(Long.valueOf(id))
-                .orElseThrow(() -> new CustomException("User not found"));
+        User existingUser = userValidation(id);
         mapStructUser.updateUserDtoToUser(updatedUserDTO, existingUser);
         userRepository.save(existingUser);
+    }
+    public void getAllUser(){
+
     }
 
 }
