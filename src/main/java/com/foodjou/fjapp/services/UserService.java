@@ -1,6 +1,5 @@
 package com.foodjou.fjapp.services;
 
-import com.foodjou.fjapp.domain.Order;
 import com.foodjou.fjapp.domain.User;
 import com.foodjou.fjapp.mapper.entityMapper.MapStructUser;
 import com.foodjou.fjapp.repositories.UserRepository;
@@ -8,6 +7,8 @@ import com.foodjou.fjapp.exception.CustomException;
 import com.foodjou.fjapp.dto.entityDTO.UserDTO;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -33,8 +34,8 @@ public class UserService {
         mapStructUser.updateUserDtoToUser(updatedUserDTO, existingUser);
         userRepository.save(existingUser);
     }
-    public void getAllUser(){
-
+    public List<User> getAllUser(){
+        return userRepository.findAll();
     }
 
 }
