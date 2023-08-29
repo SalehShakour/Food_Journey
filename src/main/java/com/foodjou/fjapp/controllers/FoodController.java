@@ -9,6 +9,7 @@ import com.foodjou.fjapp.services.FoodService;
 import com.foodjou.fjapp.dto.entityDTO.FoodDTO;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,15 +19,10 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/foods")
 @RolesAllowed({"ROLE_ADMIN", "ROLE_RESTAURANT_OWNER", "ROLE_SUPER_ADMIN"})
+@AllArgsConstructor
 public class FoodController {
 
     private final FoodService foodService;
-
-
-    @Autowired
-    public FoodController(FoodService foodService) {
-        this.foodService = foodService;
-    }
 
     @PostMapping
     public ResponseEntity<String> addFood(@Valid @RequestBody Food food,

@@ -5,22 +5,20 @@ import com.foodjou.fjapp.exception.CustomException;
 import com.foodjou.fjapp.repositories.UserRepository;
 import com.foodjou.fjapp.services.AvailableRole;
 import com.foodjou.fjapp.services.RoleService;
+import com.foodjou.fjapp.services.UserService;
 import jakarta.annotation.security.RolesAllowed;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api")
+@AllArgsConstructor
 public class AdminController {
     private final RoleService roleService;
     private final UserRepository userRepository;
-
-    public AdminController(RoleService roleService,
-                           UserRepository userRepository) {
-        this.roleService = roleService;
-        this.userRepository = userRepository;
-    }
+    private final UserService userService;
 
     @PutMapping("/admin/add/{userId}")
     @RolesAllowed("ROLE_SUPER_ADMIN")
@@ -56,5 +54,11 @@ public class AdminController {
                 .orElseThrow(()->new CustomException("User not found by email"));
         roleService.removeRoleFromUser(user, AvailableRole.ROLE_RESTAURANT_OWNER);
         return ResponseEntity.status(HttpStatus.OK).body(user.getRoles().toString());
+    }
+
+    @GetMapping("/admin/users/all")
+    @RolesAllowed({"ROLE_SUPER_ADMIN","ROLE_ADMIN"})
+    public ResponseEntity<String> getAllUser(){
+        return ResponseEntity.status(HttpStatus.OK).body(userService.getAllUser().toString());
     }
 }

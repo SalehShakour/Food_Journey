@@ -1,9 +1,11 @@
 package com.foodjou.fjapp.domain;
 
+import com.foodjou.fjapp.domain.log.LoggingListener;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 
@@ -14,6 +16,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@EntityListeners(LoggingListener.class)
 public class Order {
     @Id
     @GeneratedValue
@@ -24,5 +27,14 @@ public class Order {
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     private List<FoodOrder> foodOrders = new ArrayList<>();
+
+    @Override
+    public String toString() {
+        return "Order{" +
+                "id=" + id +
+                ", user=" + user +
+                ", date time='" + new Date() +
+                '}';
+    }
 
 }

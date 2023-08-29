@@ -1,7 +1,10 @@
 package com.foodjou.fjapp.domain;
 
+import com.foodjou.fjapp.domain.log.LoggingListener;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.Date;
 
 @Entity
 @Getter
@@ -10,6 +13,7 @@ import lombok.*;
 @NoArgsConstructor
 @Builder
 @AllArgsConstructor
+@EntityListeners(LoggingListener.class)
 public class Role {
 
     @Id
@@ -23,6 +27,10 @@ public class Role {
 
     @Override
     public String toString() {
-        return name;
+        return "Role{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", date time='" + new Date() +
+                '}';
     }
 }

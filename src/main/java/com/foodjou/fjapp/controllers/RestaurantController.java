@@ -3,11 +3,15 @@ package com.foodjou.fjapp.controllers;
 import com.foodjou.fjapp.domain.Food;
 import com.foodjou.fjapp.domain.User;
 import com.foodjou.fjapp.dto.entityDTO.FoodDTO;
+import com.foodjou.fjapp.services.FoodOrderService;
 import com.foodjou.fjapp.services.FoodService;
 import com.foodjou.fjapp.services.RestaurantService;
 import com.foodjou.fjapp.dto.entityDTO.RestaurantDTO;
 import jakarta.annotation.security.RolesAllowed;
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,17 +23,14 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/restaurants")
 @RolesAllowed({"ROLE_ADMIN", "ROLE_RESTAURANT_OWNER", "ROLE_SUPER_ADMIN"})
+@AllArgsConstructor
 public class RestaurantController {
 
     private final RestaurantService restaurantService;
     private final FoodService foodService;
+    private final FoodOrderService foodOrderService;
 
-    @Autowired
-    public RestaurantController(RestaurantService restaurantService,
-                                FoodService foodService) {
-        this.restaurantService = restaurantService;
-        this.foodService = foodService;
-    }
+
 
     @PostMapping
     public ResponseEntity<String> addRestaurant(@Valid @RequestBody RestaurantDTO restaurantDTO,
@@ -61,5 +62,14 @@ public class RestaurantController {
     @GetMapping("/{id}/menu")
     public ResponseEntity<List<Food>> getRestaurantMenuById(@PathVariable String id) {
         return ResponseEntity.status(HttpStatus.OK).body(restaurantService.getMenu(id));
+    }
+    @GetMapping("/{id}/orders")
+    public ResponseEntity<List<String>> getAllOrder(@PathVariable String id,
+                                                    @AuthenticationPrincipal User currentUser){
+        if (currentUser.getRestaurantId() != null && currentUser.getRestaurantId().equals(Long.valueOf(id))){
+            return ResponseEntity.status(HttpStatus.OK).body(
+                    foodOrderService.getFoodOrdersByRestaurantId(Long.valueOf(id)));
+        }
+        return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).build();
     }
 }
