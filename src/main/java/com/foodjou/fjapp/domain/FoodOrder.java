@@ -1,5 +1,6 @@
 package com.foodjou.fjapp.domain;
 
+import com.foodjou.fjapp.domain.log.LoggingListener;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -10,6 +11,7 @@ import lombok.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@EntityListeners(LoggingListener.class)
 public class FoodOrder {
     @Id
     @GeneratedValue
@@ -22,5 +24,15 @@ public class FoodOrder {
     private Order order;
     @Column(name = "quantity")
     private int quantity;
+
+    @Override
+    public String toString() {
+        return "FoodOrder{" +
+                "id=" + id +
+                ", food=" + food +
+                ", order=" + order +
+                ", quantity=" + quantity +
+                '}';
+    }
 
 }

@@ -1,4 +1,5 @@
 package com.foodjou.fjapp.domain;
+import com.foodjou.fjapp.domain.log.LoggingListener;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.Getter;
@@ -10,6 +11,7 @@ import java.util.List;
 @Setter
 @Entity
 @Table(name = "foods")
+@EntityListeners(LoggingListener.class)
 public class Food {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,6 +26,14 @@ public class Food {
     @ManyToOne
     @JoinColumn(name = "restaurant_id")
     private Restaurant restaurant;
-//    @OneToMany(mappedBy = "food", cascade = CascadeType.ALL)
-//    private List<FoodOrder> foodOrder;
+
+    @Override
+    public String toString() {
+        return "Food{" +
+                "id=" + id +
+                ", foodName='" + foodName + '\'' +
+                ", price=" + price +
+                ", description='" + description + '\'' +
+                '}';
+    }
 }

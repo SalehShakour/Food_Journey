@@ -1,5 +1,6 @@
 package com.foodjou.fjapp.domain;
 
+import com.foodjou.fjapp.domain.log.LoggingListener;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.ManyToAny;
@@ -16,6 +17,7 @@ import java.util.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@EntityListeners(LoggingListener.class)
 @Table(name = "users", uniqueConstraints = {
         @UniqueConstraint(columnNames = "email")
 })
@@ -120,4 +122,19 @@ public class User implements UserDetails {
             roles.remove(roleForDelete);
         }
     }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", email='" + email + '\'' +
+                ", roles=" + roles +
+                ", firstname='" + firstname + '\'' +
+                ", lastname='" + lastname + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", address='" + address + '\'' +
+                ", restaurantId=" + restaurantId +
+                '}';
+    }
+
 }
