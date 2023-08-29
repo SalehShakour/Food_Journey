@@ -5,6 +5,7 @@ import com.foodjou.fjapp.domain.User;
 import com.foodjou.fjapp.dto.entityDTO.FoodDTO;
 import com.foodjou.fjapp.services.FoodOrderService;
 import com.foodjou.fjapp.services.FoodService;
+import com.foodjou.fjapp.services.OrderService;
 import com.foodjou.fjapp.services.RestaurantService;
 import com.foodjou.fjapp.dto.entityDTO.RestaurantDTO;
 import jakarta.annotation.security.RolesAllowed;
@@ -18,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashSet;
 import java.util.List;
 
 @RestController
@@ -28,8 +30,13 @@ public class RestaurantController {
 
     private final RestaurantService restaurantService;
     private final FoodService foodService;
+    private final OrderService orderService;
     private final FoodOrderService foodOrderService;
 
+    public boolean validateUserForFoodOrders(String id, User currentUser) {
+        return currentUser.hasAnyRoles(new HashSet<>(List.of("ROLE_ADMIN", "ROLE_SUPER_ADMIN"))) ||
+                currentUser.getRestaurantId().equals(Long.valueOf(id));
+    }
 
 
     @PostMapping
@@ -63,13 +70,25 @@ public class RestaurantController {
     public ResponseEntity<List<Food>> getRestaurantMenuById(@PathVariable String id) {
         return ResponseEntity.status(HttpStatus.OK).body(restaurantService.getMenu(id));
     }
+
     @GetMapping("/{id}/orders")
     public ResponseEntity<List<String>> getAllOrder(@PathVariable String id,
-                                                    @AuthenticationPrincipal User currentUser){
-        if (currentUser.getRestaurantId() != null && currentUser.getRestaurantId().equals(Long.valueOf(id))){
-            return ResponseEntity.status(HttpStatus.OK).body(
-                    foodOrderService.getFoodOrdersByRestaurantId(Long.valueOf(id)));
-        }
-        return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).build();
+                                                    @AuthenticationPrincipal User currentUser) {
+        if (validateUserForFoodOrders(id, currentUser)) {
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body(foodOrderService.getFoodOrdersByRestaurantId(Long.valueOf(id)));
+        } else return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).build();
     }
+
+    @DeleteMapping("{id}/orders/{orderId}")
+    public ResponseEntity<String> deleteCompletedOrder(@PathVariable String id,
+                                                       @PathVariable String orderId,
+                                                       @AuthenticationPrincipal User currentUser) {
+        if (validateUserForFoodOrders(id,currentUser)){
+            orderService.removeOrder(currentUser,orderId);
+            return ResponseEntity.status(HttpStatus.OK).body("Order deleted successfully");
+        }
+        else return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).build();
+    }
+
 }

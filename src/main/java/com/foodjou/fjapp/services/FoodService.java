@@ -15,7 +15,6 @@ import java.util.List;
 @AllArgsConstructor
 public class FoodService {
     private final FoodRepository foodRepository;
-    private final MapStructFood mapStructFood;
     private final RestaurantRepository restaurantRepository;
 
     public Food foodValidation(String id){
@@ -34,18 +33,19 @@ public class FoodService {
         restaurantRepository.save(restaurant);
     }
 
-    public FoodDTO getFoodById(String id) {
-        Food food = foodValidation(id);
-        return mapStructFood.foodToFoodDTO(food);
+    public Food getFoodById(String id) {
+        return foodValidation(id);
     }
 
-    public void deleteFoodById(String id) {
-        foodRepository.delete(foodValidation(id));
+    public void deleteFood(Food food) {
+        foodRepository.delete(food);
     }
 
-    public void updateFoodById(String id, FoodDTO updatedFoodDTO) {
+    public void updateFoodById(String id, Food updatedFood) {
         Food existingFood = foodValidation(id);
-        existingFood = mapStructFood.updateFoodDtoToFood(updatedFoodDTO,existingFood);
+        if (updatedFood.getFoodName() != null) existingFood.setFoodName(updatedFood.getFoodName());
+        if (updatedFood.getPrice() != null) existingFood.setPrice(updatedFood.getPrice());
+        if (updatedFood.getDescription() != null) existingFood.setDescription(updatedFood.getDescription());
         foodRepository.save(existingFood);
 
     }
