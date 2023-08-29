@@ -2,7 +2,12 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
+    show-sql: true
   datasource:
     url: jdbc:postgresql://localhost:5432/fjapp
     username: postgres
     password: 1441
+logging:
+  level:
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
