@@ -24,6 +24,9 @@ public class RestaurantService {
     private final UserRepository userRepository;
 
     public void addRestaurant(User owner, RestaurantDTO restaurantDTO) {
+        if (owner.getRestaurantId() != null){
+            throw new CustomException("You are the owner of a restaurant");
+        }
         Restaurant restaurant = mapStructRestaurant.restaurantDtoToRestaurant(restaurantDTO);
         restaurant.setOwner(owner);
         restaurantRepository.save(restaurant);

@@ -1,10 +1,9 @@
 package com.foodjou.fjapp.services;
 import com.foodjou.fjapp.domain.Food;
 import com.foodjou.fjapp.domain.Restaurant;
+import com.foodjou.fjapp.domain.User;
 import com.foodjou.fjapp.exception.CustomException;
-import com.foodjou.fjapp.mapper.entityMapper.MapStructFood;
 import com.foodjou.fjapp.repositories.FoodRepository;
-import com.foodjou.fjapp.dto.entityDTO.FoodDTO;
 import com.foodjou.fjapp.repositories.RestaurantRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,7 +21,11 @@ public class FoodService {
                 .orElseThrow(()->new CustomException("food Not found"));
     }
 
-    public void addFood(Food food, Long restaurantId) {
+    public void addFood(Food food, User currentUser) {
+        Long restaurantId = currentUser.getRestaurantId();
+        if (restaurantId == null) {
+            throw new CustomException("You have restaurant owner role, but have not any restaurant :)");
+        }
         Restaurant restaurant = restaurantRepository.findById(restaurantId)
                 .orElseThrow(()->new CustomException("Restaurant not found by id"));
         food.setRestaurant(restaurant);

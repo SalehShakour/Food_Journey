@@ -21,10 +21,9 @@ public class UserService {
                 .orElseThrow(() -> new CustomException("User not found"));
     }
 
-    public UserDTO getUserById(String id) {
-        return mapStructUser.userToUserDTO(userValidation(id));
+    public User getUserById(String id) {
+        return userValidation(id);
     }
-
     public void deleteUserById(String id) {
         userRepository.delete(userValidation(id));
     }

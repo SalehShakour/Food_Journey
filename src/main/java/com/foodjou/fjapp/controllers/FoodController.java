@@ -23,12 +23,7 @@ public class FoodController {
     @PostMapping
     public ResponseEntity<String> addFood(@Valid @RequestBody Food food,
                                           @AuthenticationPrincipal User currentUser) {
-        Long restaurantId = currentUser.getRestaurantId();
-        if (restaurantId == null) {
-            throw new CustomException("You have restaurant owner role, but have not any restaurant :)");
-        }
-
-        foodService.addFood(food, restaurantId);
+        foodService.addFood(food, currentUser);
         return ResponseEntity.status(HttpStatus.CREATED).body("Food created successfully");
     }
 

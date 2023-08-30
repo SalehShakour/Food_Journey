@@ -40,9 +40,6 @@ public class RestaurantController {
     @PostMapping
     public ResponseEntity<String> addRestaurant(@Valid @RequestBody RestaurantDTO restaurantDTO,
                                                 @AuthenticationPrincipal User currentUser) {
-        if (currentUser.getRestaurantId() != null){
-            throw new CustomException("You are the owner of a restaurant");
-        }
         restaurantService.addRestaurant(currentUser, restaurantDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body("Restaurant created successfully");
     }
