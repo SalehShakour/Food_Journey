@@ -3,7 +3,7 @@ package com.foodjou.fjapp.auth;
 import com.foodjou.fjapp.config.JwtService;
 import com.foodjou.fjapp.domain.User;
 import com.foodjou.fjapp.repositories.UserRepository;
-import com.foodjou.fjapp.services.AvailableRole;
+import com.foodjou.fjapp.myEnum.AvailableRole;
 import com.foodjou.fjapp.services.RoleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;

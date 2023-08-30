@@ -3,7 +3,7 @@ package com.foodjou.fjapp.controllers;
 import com.foodjou.fjapp.domain.User;
 import com.foodjou.fjapp.exception.CustomException;
 import com.foodjou.fjapp.repositories.UserRepository;
-import com.foodjou.fjapp.services.AvailableRole;
+import com.foodjou.fjapp.myEnum.AvailableRole;
 import com.foodjou.fjapp.services.RoleService;
 import com.foodjou.fjapp.services.UserService;
 import jakarta.annotation.security.RolesAllowed;
