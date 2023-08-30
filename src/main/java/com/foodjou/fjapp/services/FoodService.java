@@ -37,8 +37,8 @@ public class FoodService {
         return foodValidation(id);
     }
 
-    public void deleteFood(Food food) {
-        foodRepository.delete(food);
+    public void deleteFood(String id) {
+        foodRepository.delete(foodValidation(id));
     }
 
     public void updateFoodById(String id, Food updatedFood) {

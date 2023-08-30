@@ -3,15 +3,10 @@ package com.foodjou.fjapp.controllers;
 import com.foodjou.fjapp.domain.Food;
 import com.foodjou.fjapp.domain.User;
 import com.foodjou.fjapp.exception.CustomException;
-import com.foodjou.fjapp.repositories.UserRepository;
 import com.foodjou.fjapp.services.FoodService;
-
-import com.foodjou.fjapp.dto.entityDTO.FoodDTO;
 import jakarta.annotation.security.RolesAllowed;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -37,19 +32,19 @@ public class FoodController {
         return ResponseEntity.status(HttpStatus.CREATED).body("Food created successfully");
     }
 
-    @GetMapping
-    public ResponseEntity<Food> getFoodById(HttpServletRequest request, @PathVariable String id) {
-        return ResponseEntity.status(HttpStatus.OK).body((Food) request.getAttribute(id));
+    @GetMapping("/{id}")
+    public ResponseEntity<Food> getFoodById(@PathVariable String id) {
+        return ResponseEntity.status(HttpStatus.OK).body(foodService.getFoodById(id));
 
     }
 
-    @DeleteMapping
-    public ResponseEntity<String> deleteFoodById(HttpServletRequest request,@RequestAttribute("food") Food food) {
-        foodService.deleteFood(food);
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteFoodById(@PathVariable String id) {
+        foodService.deleteFood(id);
         return ResponseEntity.status(HttpStatus.OK).body("Food deleted successfully");
     }
 
-    @PutMapping
+    @PutMapping("/{id}")
     public ResponseEntity<String> updateFoodById(@PathVariable String id,
                                                  @Valid @RequestBody Food updatedFood) {
         foodService.updateFoodById(id, updatedFood);

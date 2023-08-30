@@ -1,6 +1,5 @@
 package com.foodjou.fjapp.config;
 
-import com.foodjou.fjapp.interceptor.FoodInterceptor;
 import com.foodjou.fjapp.repositories.UserRepository;
 import com.foodjou.fjapp.services.FoodService;
 import lombok.RequiredArgsConstructor;
@@ -16,21 +15,15 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
 @RequiredArgsConstructor
-public class ApplicationConfig implements WebMvcConfigurer {
+public class ApplicationConfig {
     private final UserRepository userRepository;
     private final FoodService foodService;
 
-    @Override
-    public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new FoodInterceptor(foodService)).addPathPatterns("/api/foods/**");
-    }
 
     @Bean
     public UserDetailsService userDetailsService() {
