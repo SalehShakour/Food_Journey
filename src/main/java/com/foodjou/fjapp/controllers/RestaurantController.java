@@ -2,18 +2,16 @@ package com.foodjou.fjapp.controllers;
 
 import com.foodjou.fjapp.domain.Food;
 import com.foodjou.fjapp.domain.User;
-import com.foodjou.fjapp.dto.entityDTO.FoodDTO;
+import com.foodjou.fjapp.exception.CustomException;
+import com.foodjou.fjapp.myEnum.OrderStatus;
 import com.foodjou.fjapp.services.FoodOrderService;
 import com.foodjou.fjapp.services.FoodService;
 import com.foodjou.fjapp.services.OrderService;
 import com.foodjou.fjapp.services.RestaurantService;
 import com.foodjou.fjapp.dto.entityDTO.RestaurantDTO;
 import jakarta.annotation.security.RolesAllowed;
-import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -33,16 +31,18 @@ public class RestaurantController {
     private final OrderService orderService;
     private final FoodOrderService foodOrderService;
 
-    public boolean validateUserForFoodOrders(String id, User currentUser) {
+    public boolean isAdminOrOwner(String id, User currentUser) {
         return currentUser.hasAnyRoles(new HashSet<>(List.of("ROLE_ADMIN", "ROLE_SUPER_ADMIN"))) ||
-                currentUser.getRestaurantId().equals(Long.valueOf(id));
+                Long.valueOf(id).equals(currentUser.getRestaurantId());
     }
 
 
     @PostMapping
     public ResponseEntity<String> addRestaurant(@Valid @RequestBody RestaurantDTO restaurantDTO,
                                                 @AuthenticationPrincipal User currentUser) {
-        System.out.println(currentUser.getId());
+        if (currentUser.getRestaurantId() != null){
+            throw new CustomException("You are the owner of a restaurant");
+        }
         restaurantService.addRestaurant(currentUser, restaurantDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body("Restaurant created successfully");
     }
@@ -74,21 +74,22 @@ public class RestaurantController {
     @GetMapping("/{id}/orders")
     public ResponseEntity<List<String>> getAllOrder(@PathVariable String id,
                                                     @AuthenticationPrincipal User currentUser) {
-        if (validateUserForFoodOrders(id, currentUser)) {
+        if (isAdminOrOwner(id, currentUser)) {
             return ResponseEntity.status(HttpStatus.OK)
                     .body(foodOrderService.getFoodOrdersByRestaurantId(Long.valueOf(id)));
         } else return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).build();
     }
-
-    @DeleteMapping("{id}/orders/{orderId}")
-    public ResponseEntity<String> deleteCompletedOrder(@PathVariable String id,
-                                                       @PathVariable String orderId,
-                                                       @AuthenticationPrincipal User currentUser) {
-        if (validateUserForFoodOrders(id,currentUser)){
-            orderService.removeOrder(currentUser,orderId);
-            return ResponseEntity.status(HttpStatus.OK).body("Order deleted successfully");
+    @PutMapping("{id}/orders/{orderId}/status")
+    public ResponseEntity<String> changeOrderStatus(@PathVariable String id,
+                                                    @PathVariable String orderId,
+                                                    @AuthenticationPrincipal User currentUser,
+                                                    @RequestParam OrderStatus newStatus
+                                                    ) {
+        if (isAdminOrOwner(id,currentUser)){
+            orderService.changeOrderStatus(currentUser,orderId, newStatus);
+            return ResponseEntity.status(HttpStatus.OK).body("Order status successfully changed to "+newStatus);
         }
-        else return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).build();
+        else return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).body("you can't access orders");
     }
 
 }

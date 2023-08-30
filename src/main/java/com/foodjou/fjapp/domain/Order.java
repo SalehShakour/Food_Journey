@@ -1,6 +1,7 @@
 package com.foodjou.fjapp.domain;
 
 import com.foodjou.fjapp.domain.log.LoggingListener;
+import com.foodjou.fjapp.myEnum.OrderStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -27,6 +28,10 @@ public class Order {
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     private List<FoodOrder> foodOrders = new ArrayList<>();
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status")
+    private OrderStatus status;
 
     @Override
     public String toString() {
