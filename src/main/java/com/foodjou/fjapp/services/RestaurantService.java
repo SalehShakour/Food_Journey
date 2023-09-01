@@ -57,7 +57,7 @@ public class RestaurantService {
         return restaurant.getFoods();
     }
     public Restaurant getRestaurantOwner(User currentUser){
-        return restaurantRepository.findByOwner(currentUser).orElseThrow(()-> new CustomException("don't exist restaurant with this owner"));
+        return restaurantRepository.findByOwner(currentUser).orElseThrow(()-> new CustomException("don't exist this restaurant"));
     }
 
     public List<Restaurant> getAllRestaurants() {
