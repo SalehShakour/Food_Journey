@@ -29,7 +29,6 @@ import java.util.List;
 public class RestaurantController {
 
     private final RestaurantService restaurantService;
-    private final FoodService foodService;
     private final OrderService orderService;
     private final FoodOrderService foodOrderService;
 
@@ -104,7 +103,7 @@ public class RestaurantController {
                                                     @RequestParam OrderStatus newStatus
                                                     ) {
         if (hasAccessToRestaurant(id,currentUser)){
-            orderService.changeOrderStatus(currentUser,orderId, newStatus);
+            orderService.changeOrderStatus(orderId, newStatus);
             return ResponseEntity.status(HttpStatus.OK).body("Order status successfully changed to "+newStatus);
         }
         else return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).body("you can't access orders");

@@ -40,7 +40,7 @@ public class OrderService {
         long firstRestaurantId = foodService.getFoodById(String.valueOf(orderDTOList.get(0).foodId())).getRestaurant().getId();
         for (OrderDTO orderDTO : orderDTOList) {
             Food food = foodRepository.findById(orderDTO.foodId()).orElseThrow(() -> new CustomException("Food not found"));
-            if (food.getRestaurant().getId()!=firstRestaurantId){
+            if (food.getRestaurant().getId() != firstRestaurantId) {
                 throw new CustomException("All foods in one order must belong to one restaurant");
             }
             FoodOrder foodOrder = FoodOrder.builder().food(food).order(order).quantity(orderDTO.quantity()).build();
@@ -64,7 +64,7 @@ public class OrderService {
         return orderRepository.save(order);
     }
 
-    public void changeOrderStatus(User currentUser, String orderId, OrderStatus newStatus) {
+    public void changeOrderStatus(String orderId, OrderStatus newStatus) {
         Order order = orderValidation(orderId);
         order.setStatus(newStatus);
         orderRepository.save(order);

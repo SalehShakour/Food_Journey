@@ -38,7 +38,7 @@ public class Order {
     @Column(name = "status")
     private OrderStatus status;
 
-    public Double getPrice() {
+    public Double getTotalPrice() {
         if (foodOrders != null && !foodOrders.isEmpty()) {
             return foodOrders.stream()
                     .mapToDouble(foodOrder -> foodOrder.getQuantity() * foodOrder.getFood().getPrice())
