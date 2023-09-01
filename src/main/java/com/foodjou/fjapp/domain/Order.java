@@ -30,10 +30,22 @@ public class Order {
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     private List<FoodOrder> foodOrders = new ArrayList<>();
 
+    @Transient
+    private Double totalPrice;
+
     @Enumerated(EnumType.STRING)
     @Convert(converter = OrderStatusConverter.class)
     @Column(name = "status")
     private OrderStatus status;
+
+    public Double getPrice() {
+        if (foodOrders != null && !foodOrders.isEmpty()) {
+            return foodOrders.stream()
+                    .mapToDouble(foodOrder -> foodOrder.getQuantity() * foodOrder.getFood().getPrice())
+                    .sum();
+        }
+        return 0.0;
+    }
 
 
     @Override
