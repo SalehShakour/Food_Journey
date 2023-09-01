@@ -19,7 +19,7 @@ public class FoodService {
 
     public Food foodValidation(String id){
         return foodRepository.findById(Long.valueOf(id))
-                .orElseThrow(()->new CustomException("food Not found"));
+                .orElseThrow(()->new CustomException("Food Not found"));
     }
 
     public void addFood(Food food, User currentUser) {
@@ -36,12 +36,21 @@ public class FoodService {
         return foodValidation(id);
     }
 
-    public void deleteFood(String id) {
-        foodRepository.delete(foodValidation(id));
+    public void deleteFood(String id, User currentUser) {
+        Restaurant restaurant = restaurantService.getRestaurantOwner(currentUser);
+        Food food = foodValidation(id);
+        if (food.getRestaurant().getId() != restaurant.getId()){
+            throw new CustomException("This food does not belong to your restaurant");
+        }
+        foodRepository.delete(food);
     }
 
-    public void updateFoodById(String id, Food updatedFood) {
+    public void updateFoodById(String id, Food updatedFood ,User currentUser) {
         Food existingFood = foodValidation(id);
+        Restaurant restaurant = restaurantService.getRestaurantOwner(currentUser);
+        if (existingFood.getRestaurant().getId() != restaurant.getId()){
+            throw new CustomException("This food does not belong to your restaurant");
+        }
         if (updatedFood.getFoodName() != null) existingFood.setFoodName(updatedFood.getFoodName());
         if (updatedFood.getPrice() != null) existingFood.setPrice(updatedFood.getPrice());
         if (updatedFood.getDescription() != null) existingFood.setDescription(updatedFood.getDescription());

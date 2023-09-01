@@ -1,8 +1,9 @@
 package com.foodjou.fjapp.controllers;
 
 import com.foodjou.fjapp.domain.Food;
+import com.foodjou.fjapp.domain.Restaurant;
 import com.foodjou.fjapp.domain.User;
-import com.foodjou.fjapp.exception.CustomException;
+import com.foodjou.fjapp.dto.RestaurantResponseDTO;
 import com.foodjou.fjapp.myEnum.OrderStatus;
 import com.foodjou.fjapp.services.FoodOrderService;
 import com.foodjou.fjapp.services.FoodService;
@@ -17,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
@@ -44,6 +46,24 @@ public class RestaurantController {
         return ResponseEntity.status(HttpStatus.CREATED).body("Restaurant created successfully");
     }
 
+    @RolesAllowed("ROLE_USER")
+    @GetMapping
+    public ResponseEntity<List<RestaurantResponseDTO>> getAllRestaurantsWithMenu() {
+        List<Restaurant> restaurants = restaurantService.getAllRestaurants();
+
+        List<RestaurantResponseDTO> responseDTOs = new ArrayList<>();
+
+        for (Restaurant restaurant : restaurants) {
+            RestaurantResponseDTO responseDTO = new RestaurantResponseDTO();
+            responseDTO.setRestaurantId(restaurant.getId());
+            responseDTO.setFoods(restaurant.getFoods());
+            responseDTOs.add(responseDTO);
+        }
+
+        return ResponseEntity.ok(responseDTOs);
+    }
+
+    @RolesAllowed("ROLE_USER")
     @GetMapping("/{id}")
     public ResponseEntity<RestaurantDTO> getRestaurantById(@PathVariable String id) {
         RestaurantDTO restaurantDTO = restaurantService.getRestaurant(id);

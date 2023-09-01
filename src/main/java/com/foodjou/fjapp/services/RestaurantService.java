@@ -60,4 +60,7 @@ public class RestaurantService {
         return restaurantRepository.findByOwner(currentUser).orElseThrow(()-> new CustomException("don't exist restaurant with this owner"));
     }
 
+    public List<Restaurant> getAllRestaurants() {
+        return restaurantRepository.findAll();
+    }
 }
