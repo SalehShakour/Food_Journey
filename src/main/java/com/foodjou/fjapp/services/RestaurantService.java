@@ -3,10 +3,8 @@ package com.foodjou.fjapp.services;
 import com.foodjou.fjapp.domain.Food;
 import com.foodjou.fjapp.domain.Restaurant;
 import com.foodjou.fjapp.domain.User;
-import com.foodjou.fjapp.dto.entityDTO.FoodDTO;
-import com.foodjou.fjapp.dto.MenuDTO;
 import com.foodjou.fjapp.exception.CustomException;
-import com.foodjou.fjapp.mapper.MapStructMenu;
+import com.foodjou.fjapp.exception.DuplicateDataException;
 import com.foodjou.fjapp.mapper.entityMapper.MapStructRestaurant;
 import com.foodjou.fjapp.repositories.RestaurantRepository;
 import com.foodjou.fjapp.dto.entityDTO.RestaurantDTO;
@@ -26,6 +24,7 @@ public class RestaurantService {
     public void addRestaurant(User owner, RestaurantDTO restaurantDTO) {
         try {
             Restaurant restaurant = getRestaurantOwner(owner);
+            throw new DuplicateDataException("you already have a restaurant");
         }catch (CustomException exception){
             Restaurant restaurant = mapStructRestaurant.restaurantDtoToRestaurant(restaurantDTO);
             restaurant.setOwner(owner);
@@ -55,10 +54,7 @@ public class RestaurantService {
 
     public List<Food> getMenu(String id) {
         Restaurant restaurant = restaurantValidation(id);
-        List<Food> foodList = restaurant.getFoods();
-        MenuDTO menuDTO = new MenuDTO(foodList);
-
-        return menuDTO.result();
+        return restaurant.getFoods();
     }
     public Restaurant getRestaurantOwner(User currentUser){
         return restaurantRepository.findByOwner(currentUser).orElseThrow(()-> new CustomException("don't exist restaurant with this owner"));

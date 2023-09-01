@@ -64,6 +64,7 @@ public class RestaurantController {
     }
 
     @GetMapping("/{id}/menu")
+    @RolesAllowed("ROLE_USER")
     public ResponseEntity<List<Food>> getRestaurantMenuById(@PathVariable String id) {
         return ResponseEntity.status(HttpStatus.OK).body(restaurantService.getMenu(id));
     }

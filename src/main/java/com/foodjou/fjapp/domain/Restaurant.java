@@ -1,5 +1,6 @@
 package com.foodjou.fjapp.domain;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.foodjou.fjapp.domain.log.LoggingListener;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -32,6 +33,7 @@ public class Restaurant {
     @JoinColumn(name = "owner_id")
     private User owner;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL)
     private List<Food> foods;
 
