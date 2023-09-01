@@ -33,10 +33,10 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body("User deleted successfully");
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<String> updateUserById(@PathVariable String id,
+    @PutMapping
+    public ResponseEntity<String> updateUserById(@AuthenticationPrincipal User currentUser,
                                                  @Validated @RequestBody UserDTO updatedUserDTO) {
-        userService.updateUserById(id, updatedUserDTO);
+        userService.updateUserById(currentUser, updatedUserDTO);
         return ResponseEntity.status(HttpStatus.OK).body("User updated successfully");
 
     }

@@ -1,5 +1,6 @@
 package com.foodjou.fjapp.domain;
 
+import com.foodjou.fjapp.converter.OrderStatusConverter;
 import com.foodjou.fjapp.domain.log.LoggingListener;
 import com.foodjou.fjapp.myEnum.OrderStatus;
 import jakarta.persistence.*;
@@ -30,6 +31,7 @@ public class Order {
     private List<FoodOrder> foodOrders = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)
+    @Convert(converter = OrderStatusConverter.class)
     @Column(name = "status")
     private OrderStatus status;
 

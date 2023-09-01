@@ -28,10 +28,9 @@ public class UserService {
         userRepository.delete(userValidation(id));
     }
 
-    public void updateUserById(String id, UserDTO updatedUserDTO) {
-        User existingUser = userValidation(id);
-        mapStructUser.updateUserDtoToUser(updatedUserDTO, existingUser);
-        userRepository.save(existingUser);
+    public void updateUserById(User currentUser, UserDTO updatedUserDTO) {
+        mapStructUser.updateUserDtoToUser(updatedUserDTO, currentUser);
+        userRepository.save(currentUser);
     }
     public List<User> getAllUser(){
         return userRepository.findAll();
