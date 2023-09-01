@@ -31,9 +31,9 @@ public class RestaurantController {
     private final OrderService orderService;
     private final FoodOrderService foodOrderService;
 
-    public boolean isAdminOrOwner(String id, User currentUser) {
+    public boolean hasAccessToRestaurant(String id, User currentUser) {
         return currentUser.hasAnyRoles(new HashSet<>(List.of("ROLE_ADMIN", "ROLE_SUPER_ADMIN"))) ||
-                Long.valueOf(id).equals(currentUser.getRestaurantId());
+                Long.valueOf(id).equals(restaurantService.getRestaurantOwner(currentUser).getId());
     }
 
 
@@ -71,7 +71,7 @@ public class RestaurantController {
     @GetMapping("/{id}/orders")
     public ResponseEntity<List<String>> getAllOrder(@PathVariable String id,
                                                     @AuthenticationPrincipal User currentUser) {
-        if (isAdminOrOwner(id, currentUser)) {
+        if (hasAccessToRestaurant(id, currentUser)) {
             return ResponseEntity.status(HttpStatus.OK)
                     .body(foodOrderService.getFoodOrdersByRestaurantId(Long.valueOf(id)));
         } else return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).build();
@@ -82,7 +82,7 @@ public class RestaurantController {
                                                     @AuthenticationPrincipal User currentUser,
                                                     @RequestParam OrderStatus newStatus
                                                     ) {
-        if (isAdminOrOwner(id,currentUser)){
+        if (hasAccessToRestaurant(id,currentUser)){
             orderService.changeOrderStatus(currentUser,orderId, newStatus);
             return ResponseEntity.status(HttpStatus.OK).body("Order status successfully changed to "+newStatus);
         }

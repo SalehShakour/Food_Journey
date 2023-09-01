@@ -15,6 +15,7 @@ import java.util.List;
 public class FoodService {
     private final FoodRepository foodRepository;
     private final RestaurantRepository restaurantRepository;
+    private final RestaurantService restaurantService;
 
     public Food foodValidation(String id){
         return foodRepository.findById(Long.valueOf(id))
@@ -22,12 +23,7 @@ public class FoodService {
     }
 
     public void addFood(Food food, User currentUser) {
-        Long restaurantId = currentUser.getRestaurantId();
-        if (restaurantId == null) {
-            throw new CustomException("You have restaurant owner role, but have not any restaurant :)");
-        }
-        Restaurant restaurant = restaurantRepository.findById(restaurantId)
-                .orElseThrow(()->new CustomException("Restaurant not found by id"));
+        Restaurant restaurant = restaurantService.getRestaurantOwner(currentUser);
         food.setRestaurant(restaurant);
         foodRepository.save(food);
         List<Food> tempList = restaurant.getFoods();
@@ -50,7 +46,6 @@ public class FoodService {
         if (updatedFood.getPrice() != null) existingFood.setPrice(updatedFood.getPrice());
         if (updatedFood.getDescription() != null) existingFood.setDescription(updatedFood.getDescription());
         foodRepository.save(existingFood);
-
     }
 }
 

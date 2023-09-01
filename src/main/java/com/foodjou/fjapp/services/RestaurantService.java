@@ -24,14 +24,15 @@ public class RestaurantService {
     private final UserRepository userRepository;
 
     public void addRestaurant(User owner, RestaurantDTO restaurantDTO) {
-        if (owner.getRestaurantId() != null){
-            throw new CustomException("You are the owner of a restaurant");
+        try {
+            Restaurant restaurant = getRestaurantOwner(owner);
+        }catch (CustomException exception){
+            Restaurant restaurant = mapStructRestaurant.restaurantDtoToRestaurant(restaurantDTO);
+            restaurant.setOwner(owner);
+            restaurantRepository.save(restaurant);
+            userRepository.save(owner);
         }
-        Restaurant restaurant = mapStructRestaurant.restaurantDtoToRestaurant(restaurantDTO);
-        restaurant.setOwner(owner);
-        restaurantRepository.save(restaurant);
-        owner.setRestaurantId(restaurant.getId());
-        userRepository.save(owner);
+
     }
     public Restaurant restaurantValidation(String id){
         return restaurantRepository.findById(Long.valueOf(id))
@@ -55,9 +56,12 @@ public class RestaurantService {
     public List<Food> getMenu(String id) {
         Restaurant restaurant = restaurantValidation(id);
         List<Food> foodList = restaurant.getFoods();
-        List<FoodDTO> foodDTOList = MapStructMenu.INSTANCE.foodsToFoodDTOs(foodList);
         MenuDTO menuDTO = new MenuDTO(foodList);
 
         return menuDTO.result();
     }
+    public Restaurant getRestaurantOwner(User currentUser){
+        return restaurantRepository.findByOwner(currentUser).orElseThrow(()-> new CustomException("don't exist restaurant with this owner"));
+    }
+
 }
