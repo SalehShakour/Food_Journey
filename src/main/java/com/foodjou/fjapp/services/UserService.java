@@ -1,5 +1,6 @@
 package com.foodjou.fjapp.services;
 
+import com.foodjou.fjapp.domain.Restaurant;
 import com.foodjou.fjapp.domain.User;
 import com.foodjou.fjapp.mapper.entityMapper.MapStructUser;
 import com.foodjou.fjapp.repositories.UserRepository;
@@ -7,8 +8,11 @@ import com.foodjou.fjapp.exception.CustomException;
 import com.foodjou.fjapp.dto.entityDTO.UserDTO;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -37,6 +41,13 @@ public class UserService {
     }
     public List<User> getAllUser(){
         return userRepository.findAll();
+    }
+
+    public Restaurant getRestaurantById(User currentUser, Long restaurantId){
+        return currentUser.getOwnedRestaurants().stream()
+                .filter(restaurant -> restaurant.getId()==restaurantId)
+                .findFirst().orElseThrow(
+                        ()->new CustomException("Current user don't have restaurant with this id"));
     }
 
 }

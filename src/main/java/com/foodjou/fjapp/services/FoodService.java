@@ -5,6 +5,7 @@ import com.foodjou.fjapp.domain.User;
 import com.foodjou.fjapp.exception.CustomException;
 import com.foodjou.fjapp.repositories.FoodRepository;
 import com.foodjou.fjapp.repositories.RestaurantRepository;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -15,15 +16,14 @@ import java.util.List;
 public class FoodService {
     private final FoodRepository foodRepository;
     private final RestaurantRepository restaurantRepository;
-    private final RestaurantService restaurantService;
+    private final UserService userService;
 
     public Food foodValidation(String id){
         return foodRepository.findById(Long.valueOf(id))
                 .orElseThrow(()->new CustomException("Food Not found"));
     }
 
-    public void addFood(Food food, User currentUser) {
-        Restaurant restaurant = restaurantService.getRestaurantOwner(currentUser);
+    public void addFood(Food food, User currentUser, Restaurant restaurant) {
         food.setRestaurant(restaurant);
         foodRepository.save(food);
         List<Food> tempList = restaurant.getFoods();
@@ -36,18 +36,18 @@ public class FoodService {
         return foodValidation(id);
     }
 
-    public void deleteFood(String id, User currentUser) {
-        Restaurant restaurant = restaurantService.getRestaurantOwner(currentUser);
-        Food food = foodValidation(id);
+    public void deleteFood(String orderId, User currentUser, Long restaurantId) {
+        Restaurant restaurant = userService.getRestaurantById(currentUser, restaurantId);
+        Food food = foodValidation(orderId);
         if (food.getRestaurant().getId() != restaurant.getId()){
             throw new CustomException("This food does not belong to your restaurant");
         }
         foodRepository.delete(food);
     }
 
-    public void updateFoodById(String id, Food updatedFood ,User currentUser) {
-        Food existingFood = foodValidation(id);
-        Restaurant restaurant = restaurantService.getRestaurantOwner(currentUser);
+    public void updateFoodById(String orderId, Food updatedFood ,User currentUser, Long RestaurantId) {
+        Food existingFood = foodValidation(orderId);
+        Restaurant restaurant = userService.getRestaurantById(currentUser,RestaurantId);
         if (existingFood.getRestaurant().getId() != restaurant.getId()){
             throw new CustomException("This food does not belong to your restaurant");
         }

@@ -34,7 +34,7 @@ public class Restaurant {
     private User owner;
 
     @JsonManagedReference
-    @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Food> foods;
 
     @Transient
