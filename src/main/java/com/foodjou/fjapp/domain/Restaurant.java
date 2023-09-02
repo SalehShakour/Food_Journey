@@ -33,9 +33,10 @@ public class Restaurant {
     @JoinColumn(name = "owner_id")
     private User owner;
 
+    //todo why with cascade delete not working ?
     @JsonManagedReference
-    @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private List<Food> foods = new ArrayList<>();
+    @OneToMany(mappedBy = "restaurant", fetch = FetchType.EAGER)
+    private List<Food> foods;
 
     @Transient
     private Double averagePriceFood;
