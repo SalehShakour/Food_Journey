@@ -3,10 +3,8 @@ package com.foodjou.fjapp.services;
 import com.foodjou.fjapp.domain.Food;
 import com.foodjou.fjapp.domain.Restaurant;
 import com.foodjou.fjapp.domain.User;
-import com.foodjou.fjapp.dto.entityDTO.FoodDTO;
-import com.foodjou.fjapp.dto.MenuDTO;
 import com.foodjou.fjapp.exception.CustomException;
-import com.foodjou.fjapp.mapper.MapStructMenu;
+import com.foodjou.fjapp.exception.DuplicateDataException;
 import com.foodjou.fjapp.mapper.entityMapper.MapStructRestaurant;
 import com.foodjou.fjapp.repositories.RestaurantRepository;
 import com.foodjou.fjapp.dto.entityDTO.RestaurantDTO;
@@ -24,11 +22,16 @@ public class RestaurantService {
     private final UserRepository userRepository;
 
     public void addRestaurant(User owner, RestaurantDTO restaurantDTO) {
-        Restaurant restaurant = mapStructRestaurant.restaurantDtoToRestaurant(restaurantDTO);
-        restaurant.setOwner(owner);
-        restaurantRepository.save(restaurant);
-        owner.setRestaurantId(restaurant.getId());
-        userRepository.save(owner);
+        try {
+            Restaurant restaurant = getRestaurantOwner(owner);
+            throw new DuplicateDataException("you already have a restaurant");
+        }catch (CustomException exception){
+            Restaurant restaurant = mapStructRestaurant.restaurantDtoToRestaurant(restaurantDTO);
+            restaurant.setOwner(owner);
+            restaurantRepository.save(restaurant);
+            userRepository.save(owner);
+        }
+
     }
     public Restaurant restaurantValidation(String id){
         return restaurantRepository.findById(Long.valueOf(id))
@@ -43,18 +46,21 @@ public class RestaurantService {
         restaurantRepository.delete(restaurantValidation(id));
     }
 
-    public void updateRestaurant(String id, RestaurantDTO updatedRestaurantDTO) {
-        Restaurant existingRestaurant = restaurantValidation(id);
+    public void updateRestaurant(User user, RestaurantDTO updatedRestaurantDTO) {
+        Restaurant existingRestaurant = getRestaurantOwner(user);
         existingRestaurant = mapStructRestaurant.updateRestaurantDtoToRestaurant(updatedRestaurantDTO,existingRestaurant);
         restaurantRepository.save(existingRestaurant);
     }
 
     public List<Food> getMenu(String id) {
         Restaurant restaurant = restaurantValidation(id);
-        List<Food> foodList = restaurant.getFoods();
-        List<FoodDTO> foodDTOList = MapStructMenu.INSTANCE.foodsToFoodDTOs(foodList);
-        MenuDTO menuDTO = new MenuDTO(foodList);
+        return restaurant.getFoods();
+    }
+    public Restaurant getRestaurantOwner(User currentUser){
+        return restaurantRepository.findByOwner(currentUser).orElseThrow(()-> new CustomException("don't exist this restaurant"));
+    }
 
-        return menuDTO.result();
+    public List<Restaurant> getAllRestaurants() {
+        return restaurantRepository.findAll();
     }
 }

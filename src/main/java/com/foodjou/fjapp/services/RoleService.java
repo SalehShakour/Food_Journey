@@ -2,6 +2,7 @@ package com.foodjou.fjapp.services;
 
 import com.foodjou.fjapp.domain.Role;
 import com.foodjou.fjapp.domain.User;
+import com.foodjou.fjapp.myEnum.AvailableRole;
 import com.foodjou.fjapp.repositories.RoleRepository;
 import com.foodjou.fjapp.repositories.UserRepository;
 import lombok.AllArgsConstructor;

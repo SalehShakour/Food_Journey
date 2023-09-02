@@ -45,7 +45,6 @@ public class User implements UserDetails {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Order> orders = new ArrayList<>();
-    private Long restaurantId = null;
 
 
     @Override
@@ -135,6 +134,7 @@ public class User implements UserDetails {
         }
     }
 
+
     @Override
     public String toString() {
         return "User{" +
@@ -145,7 +145,6 @@ public class User implements UserDetails {
                 ", lastname='" + lastname + '\'' +
                 ", phoneNumber='" + phoneNumber + '\'' +
                 ", address='" + address + '\'' +
-                ", restaurantId=" + restaurantId +
                 ", date time='" + new Date() +
                 '}';
     }

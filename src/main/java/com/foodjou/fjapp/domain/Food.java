@@ -1,4 +1,5 @@
 package com.foodjou.fjapp.domain;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.foodjou.fjapp.domain.log.LoggingListener;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -24,6 +25,7 @@ public class Food {
     private Double price;
     @Column(name = "description")
     private String description;
+    @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "restaurant_id")
     private Restaurant restaurant;

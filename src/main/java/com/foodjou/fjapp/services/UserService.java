@@ -21,18 +21,19 @@ public class UserService {
                 .orElseThrow(() -> new CustomException("User not found"));
     }
 
-    public UserDTO getUserById(String id) {
-        return mapStructUser.userToUserDTO(userValidation(id));
+    public User getUserById(String id) {
+        return userValidation(id);
     }
-
     public void deleteUserById(String id) {
         userRepository.delete(userValidation(id));
     }
 
-    public void updateUserById(String id, UserDTO updatedUserDTO) {
-        User existingUser = userValidation(id);
-        mapStructUser.updateUserDtoToUser(updatedUserDTO, existingUser);
-        userRepository.save(existingUser);
+    public void updateUserById(User currentUser, UserDTO updatedUserDTO) {
+        if (userRepository.findByEmail(updatedUserDTO.email()).orElse(null) == null){
+            mapStructUser.updateUserDtoToUser(updatedUserDTO, currentUser);
+            userRepository.save(currentUser);
+        }
+        else throw new CustomException("This email address is unavailable");
     }
     public List<User> getAllUser(){
         return userRepository.findAll();

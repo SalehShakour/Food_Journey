@@ -2,9 +2,11 @@ package com.foodjou.fjapp.auth;
 
 import com.foodjou.fjapp.config.JwtService;
 import com.foodjou.fjapp.domain.User;
+import com.foodjou.fjapp.exception.CustomException;
 import com.foodjou.fjapp.repositories.UserRepository;
-import com.foodjou.fjapp.services.AvailableRole;
+import com.foodjou.fjapp.myEnum.AvailableRole;
 import com.foodjou.fjapp.services.RoleService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -20,7 +22,12 @@ public class AuthenticationService {
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
 
+
+    @Transactional
     public AuthenticationResponse register(RegisterRequest request) {
+        if (userRepository.findByEmail(request.getEmail()).orElse(null) != null){
+            throw new CustomException("This email is not available");
+        }
         var user = User.builder()
                 .firstname(request.getFirstname())
                 .lastname(request.getLastname())
