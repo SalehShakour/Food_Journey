@@ -1,7 +1,6 @@
 package com.foodjou.fjapp.controllers;
 
 import com.foodjou.fjapp.domain.User;
-import com.foodjou.fjapp.domain.log.LoggingListener;
 import com.foodjou.fjapp.exception.CustomException;
 import com.foodjou.fjapp.repositories.UserRepository;
 import com.foodjou.fjapp.myEnum.AvailableRole;
