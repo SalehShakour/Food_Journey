@@ -29,8 +29,11 @@ public class UserService {
     }
 
     public void updateUserById(User currentUser, UserDTO updatedUserDTO) {
-        mapStructUser.updateUserDtoToUser(updatedUserDTO, currentUser);
-        userRepository.save(currentUser);
+        if (userRepository.findByEmail(updatedUserDTO.email()).orElse(null) == null){
+            mapStructUser.updateUserDtoToUser(updatedUserDTO, currentUser);
+            userRepository.save(currentUser);
+        }
+        else throw new CustomException("This email address is unavailable");
     }
     public List<User> getAllUser(){
         return userRepository.findAll();

@@ -36,7 +36,7 @@ public class UserController {
     public ResponseEntity<String> updateUserById(@AuthenticationPrincipal User currentUser,
                                                  @Validated @RequestBody UserDTO updatedUserDTO) {
         userService.updateUserById(currentUser, updatedUserDTO);
-        return ResponseEntity.status(HttpStatus.OK).body("User updated successfully");
+        return ResponseEntity.status(HttpStatus.OK).body("User updated successfully. if your email changed, login again.");
 
     }
 }
