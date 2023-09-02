@@ -69,9 +69,20 @@ public class RestaurantController {
 
     @GetMapping("/{id}/menu")
     @RolesAllowed("ROLE_USER")
-    public ResponseEntity<List<Food>> getRestaurantMenuById(@PathVariable String id) {
-        return ResponseEntity.status(HttpStatus.OK).body(restaurantService.getMenu(id));
+    public ResponseEntity<List<Food>> getRestaurantMenuById(
+            @PathVariable String id,
+            @RequestParam(required = false, defaultValue = "asc") String sort) {
+        List<Food> menu = restaurantService.getMenu(id);
+
+        if ("desc".equalsIgnoreCase(sort)) {
+            menu.sort(Comparator.comparingDouble(Food::getPrice).reversed());
+        } else {
+            menu.sort(Comparator.comparingDouble(Food::getPrice));
+        }
+
+        return ResponseEntity.status(HttpStatus.OK).body(menu);
     }
+
 
     @GetMapping("/{id}/orders")
     public ResponseEntity<List<String>> getAllOrder(@PathVariable String id,
