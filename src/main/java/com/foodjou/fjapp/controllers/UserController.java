@@ -20,7 +20,7 @@ public class UserController {
     private final MapStructUser mapStructUser;
 
     @GetMapping
-    public ResponseEntity<UserDTO> getUserById(@AuthenticationPrincipal User currentUser) {
+    public ResponseEntity<UserDTO> showProfile(@AuthenticationPrincipal User currentUser) {
         return ResponseEntity.status(HttpStatus.OK).body(mapStructUser.userToUserDTO(currentUser));
 
     }
