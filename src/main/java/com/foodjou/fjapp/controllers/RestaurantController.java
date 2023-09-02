@@ -19,6 +19,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 
@@ -45,22 +46,6 @@ public class RestaurantController {
         return ResponseEntity.status(HttpStatus.CREATED).body("Restaurant created successfully");
     }
 
-    @RolesAllowed("ROLE_USER")
-    @GetMapping
-    public ResponseEntity<List<RestaurantResponseDTO>> getAllRestaurantsWithMenu() {
-        List<Restaurant> restaurants = restaurantService.getAllRestaurants();
-
-        List<RestaurantResponseDTO> responseDTOs = new ArrayList<>();
-
-        for (Restaurant restaurant : restaurants) {
-            RestaurantResponseDTO responseDTO = new RestaurantResponseDTO();
-            responseDTO.setRestaurantId(restaurant.getId());
-            responseDTO.setFoods(restaurant.getFoods());
-            responseDTOs.add(responseDTO);
-        }
-
-        return ResponseEntity.ok(responseDTOs);
-    }
 
     @RolesAllowed("ROLE_USER")
     @GetMapping("/{id}")
@@ -107,6 +92,30 @@ public class RestaurantController {
             return ResponseEntity.status(HttpStatus.OK).body("Order status successfully changed to "+newStatus);
         }
         else return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).body("you can't access orders");
+    }
+
+    @RolesAllowed("ROLE_USER")
+    @GetMapping
+    public ResponseEntity<List<RestaurantResponseDTO>> getAllRestaurantsWithMenu(
+            @RequestParam(required = false, defaultValue = "asc") String sort) {
+        List<Restaurant> restaurants = restaurantService.getAllRestaurants();
+
+        if ("desc".equalsIgnoreCase(sort)) {
+            restaurants.sort(Comparator.comparingDouble(Restaurant::getAveragePriceFood).reversed());
+        } else {
+            restaurants.sort(Comparator.comparingDouble(Restaurant::getAveragePriceFood));
+        }
+
+        List<RestaurantResponseDTO> responseDTOs = new ArrayList<>();
+
+        for (Restaurant restaurant : restaurants) {
+            RestaurantResponseDTO responseDTO = new RestaurantResponseDTO();
+            responseDTO.setRestaurantId(restaurant.getId());
+            responseDTO.setFoods(restaurant.getFoods());
+            responseDTOs.add(responseDTO);
+        }
+
+        return ResponseEntity.ok(responseDTOs);
     }
 
 }

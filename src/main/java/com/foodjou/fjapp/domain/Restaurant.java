@@ -37,6 +37,20 @@ public class Restaurant {
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL)
     private List<Food> foods;
 
+    @Transient
+    private Double averagePriceFood;
+
+    public Double getAveragePriceFood() {
+        if (foods == null || foods.isEmpty()) {
+            return 0.0;
+        }
+        return foods.stream()
+                .filter(food -> food.getPrice() != null)
+                .mapToDouble(Food::getPrice)
+                .average()
+                .orElse(0.0);
+    }
+
     @Override
     public String toString() {
         return "Restaurant{" +
