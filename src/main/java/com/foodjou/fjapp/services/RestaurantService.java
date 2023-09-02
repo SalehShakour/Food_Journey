@@ -46,8 +46,8 @@ public class RestaurantService {
         restaurantRepository.delete(restaurantValidation(id));
     }
 
-    public void updateRestaurant(String id, RestaurantDTO updatedRestaurantDTO) {
-        Restaurant existingRestaurant = restaurantValidation(id);
+    public void updateRestaurant(User user, RestaurantDTO updatedRestaurantDTO) {
+        Restaurant existingRestaurant = getRestaurantOwner(user);
         existingRestaurant = mapStructRestaurant.updateRestaurantDtoToRestaurant(updatedRestaurantDTO,existingRestaurant);
         restaurantRepository.save(existingRestaurant);
     }

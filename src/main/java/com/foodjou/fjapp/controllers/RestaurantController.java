@@ -48,6 +48,13 @@ public class RestaurantController {
         return ResponseEntity.status(HttpStatus.CREATED).body("Restaurant created successfully");
     }
 
+    @PutMapping
+    public ResponseEntity<String> updateRestaurant(@Valid @RequestBody RestaurantDTO restaurantDTO,
+                                                   @AuthenticationPrincipal User currentUser) {
+        restaurantService.updateRestaurant(currentUser, restaurantDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body("Restaurant updated successfully");
+    }
+
 
     @RolesAllowed("ROLE_USER")
     @GetMapping("/{id}")
@@ -60,13 +67,6 @@ public class RestaurantController {
     public ResponseEntity<String> deleteRestaurantByID(@PathVariable String id) {
         restaurantService.deleteRestaurant(id);
         return ResponseEntity.status(HttpStatus.OK).body("Restaurant deleted successfully");
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<String> updateRestaurantById(@PathVariable String id,
-                                                       @Valid @RequestBody RestaurantDTO updatedRestaurantDTO) {
-        restaurantService.updateRestaurant(id, updatedRestaurantDTO);
-        return ResponseEntity.status(HttpStatus.OK).body("Restaurant updated successfully");
     }
 
     @GetMapping("/{id}/menu")
@@ -93,7 +93,6 @@ public class RestaurantController {
     }
 
 
-
     @GetMapping("/{id}/orders")
     public ResponseEntity<List<String>> getAllOrder(@PathVariable String id,
                                                     @AuthenticationPrincipal User currentUser) {
@@ -102,17 +101,17 @@ public class RestaurantController {
                     .body(foodOrderService.getFoodOrdersByRestaurantId(Long.valueOf(id)));
         } else return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).build();
     }
-    @PutMapping("{id}/orders/{orderId}/status")
-    public ResponseEntity<String> changeOrderStatus(@PathVariable String id,
-                                                    @PathVariable String orderId,
+
+    @PutMapping("/orders/{orderId}/status")
+    public ResponseEntity<String> changeOrderStatus(@PathVariable String orderId,
                                                     @AuthenticationPrincipal User currentUser,
                                                     @RequestParam OrderStatus newStatus
-                                                    ) {
-        if (hasAccessToRestaurant(id,currentUser)){
-            orderService.changeOrderStatus(orderId, newStatus);
-            return ResponseEntity.status(HttpStatus.OK).body("Order status successfully changed to "+newStatus);
-        }
-        else return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).body("you can't access orders");
+    ) {
+        restaurantService.getRestaurantOwner(currentUser);
+
+        orderService.changeOrderStatus(currentUser, orderId, newStatus);
+        return ResponseEntity.status(HttpStatus.OK).body("Order status successfully changed to " + newStatus);
+
     }
 
     @RolesAllowed("ROLE_USER")

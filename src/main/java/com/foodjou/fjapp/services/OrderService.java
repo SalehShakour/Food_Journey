@@ -1,9 +1,6 @@
 package com.foodjou.fjapp.services;
 
-import com.foodjou.fjapp.domain.Food;
-import com.foodjou.fjapp.domain.FoodOrder;
-import com.foodjou.fjapp.domain.Order;
-import com.foodjou.fjapp.domain.User;
+import com.foodjou.fjapp.domain.*;
 import com.foodjou.fjapp.dto.entityDTO.OrderDTO;
 import com.foodjou.fjapp.exception.CustomException;
 import com.foodjou.fjapp.myEnum.OrderStatus;
@@ -12,6 +9,8 @@ import com.foodjou.fjapp.repositories.FoodRepository;
 import com.foodjou.fjapp.repositories.OrderRepository;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -26,6 +25,7 @@ public class OrderService {
     private final FoodRepository foodRepository;
     private final FoodOrderRepository foodOrderRepository;
     private final FoodService foodService;
+    private final RestaurantService restaurantService;
 
 
     public Order orderValidation(String id) {
@@ -64,8 +64,12 @@ public class OrderService {
         return orderRepository.save(order);
     }
 
-    public void changeOrderStatus(String orderId, OrderStatus newStatus) {
+    public void changeOrderStatus(User currentUser, String orderId, OrderStatus newStatus) {
         Order order = orderValidation(orderId);
+        Restaurant restaurant = restaurantService.getRestaurantOwner(currentUser);
+        if (order.getFoodOrders().get(0).getFood().getRestaurant().getId() != restaurant.getId()){
+             throw new CustomException("you can't access orders");
+        }
         order.setStatus(newStatus);
         orderRepository.save(order);
     }
