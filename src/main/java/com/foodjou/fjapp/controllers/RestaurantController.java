@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/restaurants")
@@ -71,8 +72,15 @@ public class RestaurantController {
     @RolesAllowed("ROLE_USER")
     public ResponseEntity<List<Food>> getRestaurantMenuById(
             @PathVariable String id,
-            @RequestParam(required = false, defaultValue = "asc") String sort) {
+            @RequestParam(required = false, defaultValue = "asc") String sort,
+            @RequestParam(required = false) String search) {
         List<Food> menu = restaurantService.getMenu(id);
+
+        if (search != null && !search.isEmpty()) {
+            menu = menu.stream()
+                    .filter(food -> food.getFoodName().toLowerCase().contains(search.toLowerCase()))
+                    .collect(Collectors.toList());
+        }
 
         if ("desc".equalsIgnoreCase(sort)) {
             menu.sort(Comparator.comparingDouble(Food::getPrice).reversed());
@@ -82,6 +90,7 @@ public class RestaurantController {
 
         return ResponseEntity.status(HttpStatus.OK).body(menu);
     }
+
 
 
     @GetMapping("/{id}/orders")
@@ -108,8 +117,16 @@ public class RestaurantController {
     @RolesAllowed("ROLE_USER")
     @GetMapping
     public ResponseEntity<List<RestaurantResponseDTO>> getAllRestaurantsWithMenu(
-            @RequestParam(required = false, defaultValue = "asc") String sort) {
+            @RequestParam(required = false, defaultValue = "asc") String sort,
+            @RequestParam(required = false) String search) {
         List<Restaurant> restaurants = restaurantService.getAllRestaurants();
+
+        if (search != null && !search.isEmpty()) {
+            restaurants = restaurants.stream()
+                    .filter(restaurant -> restaurant.getFoods().stream()
+                            .anyMatch(food -> food.getFoodName().toLowerCase().contains(search.toLowerCase())))
+                    .collect(Collectors.toList());
+        }
 
         if ("desc".equalsIgnoreCase(sort)) {
             restaurants.sort(Comparator.comparingDouble(Restaurant::getAveragePriceFood).reversed());
