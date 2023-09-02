@@ -31,8 +31,8 @@ public class RestaurantService {
         userRepository.save(owner);
     }
 
-    public Restaurant restaurantValidation(String id) {
-        return restaurantRepository.findById(Long.valueOf(id))
+    public Restaurant restaurantValidation(String restaurantId) {
+        return restaurantRepository.findById(Long.parseLong(restaurantId))
                 .orElseThrow(() -> new CustomException("Restaurant not found"));
     }
 
@@ -53,8 +53,8 @@ public class RestaurantService {
         restaurantRepository.save(existingRestaurant);
     }
 
-    public List<Food> getMenu(String id) {
-        Restaurant restaurant = restaurantValidation(id);
+    public List<Food> getMenu(String restaurantId) {
+        Restaurant restaurant = restaurantValidation(restaurantId);
         return restaurant.getFoods();
     }
 

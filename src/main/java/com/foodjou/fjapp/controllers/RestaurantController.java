@@ -45,7 +45,7 @@ public class RestaurantController {
         return ResponseEntity.status(HttpStatus.CREATED).body("Restaurant updated successfully");
     }
 
-    @RolesAllowed("ROLE_USER")
+    @PreAuthorize("hasAnyAuthority('ROLE_USER')")
     @GetMapping("/{restaurantId}")
     public ResponseEntity<RestaurantDTO> getRestaurantById(@PathVariable String restaurantId) {
         RestaurantDTO restaurantDTO = restaurantService.getRestaurant(restaurantId);
@@ -59,7 +59,7 @@ public class RestaurantController {
     }
 
     @GetMapping("/{id}/menu")
-    @RolesAllowed("ROLE_USER")
+    @PreAuthorize("hasAnyAuthority('ROLE_USER')")
     public ResponseEntity<List<Food>> getRestaurantMenuById(@PathVariable String id) {
         List<Food> menu = restaurantService.getMenu(id);
         return ResponseEntity.status(HttpStatus.OK).body(menu);
@@ -84,7 +84,7 @@ public class RestaurantController {
 
     }
 
-    @RolesAllowed("ROLE_USER")
+    @PreAuthorize("hasAnyAuthority('ROLE_USER')")
     @GetMapping
     public ResponseEntity<List<RestaurantResponseDTO>> getAllRestaurantsWithMenu() {
         return ResponseEntity.ok(restaurantService.getAllRestaurantsWithMenu());
