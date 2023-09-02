@@ -2,6 +2,7 @@ package com.foodjou.fjapp.auth;
 
 import com.foodjou.fjapp.config.JwtService;
 import com.foodjou.fjapp.domain.User;
+import com.foodjou.fjapp.exception.CustomException;
 import com.foodjou.fjapp.repositories.UserRepository;
 import com.foodjou.fjapp.myEnum.AvailableRole;
 import com.foodjou.fjapp.services.RoleService;
@@ -24,6 +25,9 @@ public class AuthenticationService {
 
     @Transactional
     public AuthenticationResponse register(RegisterRequest request) {
+        if (userRepository.findByEmail(request.getEmail()).orElse(null) != null){
+            throw new CustomException("This email is not available");
+        }
         var user = User.builder()
                 .firstname(request.getFirstname())
                 .lastname(request.getLastname())
