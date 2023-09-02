@@ -9,6 +9,7 @@ import java.util.List;
 @Getter
 @Setter
 public class RestaurantResponseDTO {
+    private String restaurantName;
     private Long restaurantId;
     private List<Food> foods;
 }

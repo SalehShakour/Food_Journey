@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @RestController
@@ -118,13 +119,14 @@ public class RestaurantController {
     @GetMapping
     public ResponseEntity<List<RestaurantResponseDTO>> getAllRestaurantsWithMenu(
             @RequestParam(required = false, defaultValue = "asc") String sort,
-            @RequestParam(required = false) String search) {
+            @RequestParam(required = false) String restaurantSearch,
+            @RequestParam(required = false) String foodSearch) {
         List<Restaurant> restaurants = restaurantService.getAllRestaurants();
 
-        if (search != null && !search.isEmpty()) {
+        if (restaurantSearch != null && !restaurantSearch.isEmpty()) {
+            String restaurantRegexPattern = ".*" + Pattern.quote(restaurantSearch) + ".*";
             restaurants = restaurants.stream()
-                    .filter(restaurant -> restaurant.getFoods().stream()
-                            .anyMatch(food -> food.getFoodName().toLowerCase().contains(search.toLowerCase())))
+                    .filter(restaurant -> restaurant.getRestaurantName().toLowerCase().matches(restaurantRegexPattern))
                     .collect(Collectors.toList());
         }
 
@@ -139,11 +141,23 @@ public class RestaurantController {
         for (Restaurant restaurant : restaurants) {
             RestaurantResponseDTO responseDTO = new RestaurantResponseDTO();
             responseDTO.setRestaurantId(restaurant.getId());
-            responseDTO.setFoods(restaurant.getFoods());
+            responseDTO.setRestaurantName(restaurant.getRestaurantName());
+
+            if (foodSearch != null && !foodSearch.isEmpty()) {
+                String foodRegexPattern = ".*" + Pattern.quote(foodSearch) + ".*";
+                List<Food> filteredFoods = restaurant.getFoods().stream()
+                        .filter(food -> food.getFoodName().toLowerCase().matches(foodRegexPattern))
+                        .collect(Collectors.toList());
+                responseDTO.setFoods(filteredFoods);
+            } else {
+                responseDTO.setFoods(restaurant.getFoods());
+            }
+
             responseDTOs.add(responseDTO);
         }
 
         return ResponseEntity.ok(responseDTOs);
     }
+
 
 }
