@@ -93,12 +93,13 @@ public class RestaurantController {
     }
 
 
-    @GetMapping("/orders")
-    public ResponseEntity<List<String>> getAllOrder(@AuthenticationPrincipal User currentUser) {
-
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(foodOrderService.getFoodOrdersByRestaurant(currentUser));
-
+    @GetMapping("/{id}/orders")
+    public ResponseEntity<List<String>> getAllOrder(@PathVariable String id,
+                                                    @AuthenticationPrincipal User currentUser) {
+        if (hasAccessToRestaurant(id, currentUser)) {
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body(foodOrderService.getFoodOrdersByRestaurantId(Long.valueOf(id)));
+        } else return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).build();
     }
 
     @PutMapping("/orders/{orderId}/status")
