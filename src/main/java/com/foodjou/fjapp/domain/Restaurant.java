@@ -35,7 +35,7 @@ public class Restaurant {
 
     @JsonManagedReference
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private List<Food> foods;
+    private List<Food> foods = new ArrayList<>();
 
     @Transient
     private Double averagePriceFood;

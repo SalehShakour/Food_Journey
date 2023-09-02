@@ -73,6 +73,7 @@ public class RestaurantService {
             RestaurantResponseDTO responseDTO = new RestaurantResponseDTO();
             responseDTO.setRestaurantId(restaurant.getId());
             responseDTO.setRestaurantName(restaurant.getRestaurantName());
+            responseDTO.setFoods(restaurant.getFoods());
             responseDTOs.add(responseDTO);
         }
         return responseDTOs;
