@@ -11,18 +11,18 @@ import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/foods")
-@RolesAllowed("ROLE_RESTAURANT_OWNER")
+@PreAuthorize("hasAnyAuthority('ROLE_RESTAURANT_OWNER')")
 @AllArgsConstructor
 public class FoodController {
 
     private final FoodService foodService;
     private final UserService userService;
-    private final FoodRepository foodRepository;
 
 
     @PostMapping("/{restaurantId:[0-9]+}")
@@ -34,7 +34,7 @@ public class FoodController {
         return ResponseEntity.status(HttpStatus.CREATED).body("Food created successfully");
     }
 
-    @RolesAllowed("ROLE_USER")
+    @PreAuthorize("hasAnyAuthority('ROLE_USER')")
     @GetMapping("/{foodId}")
     public ResponseEntity<Food> getFoodById(@PathVariable String foodId) {
         return ResponseEntity.status(HttpStatus.OK).body(foodService.getFoodById(foodId));
