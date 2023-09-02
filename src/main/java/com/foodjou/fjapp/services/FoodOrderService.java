@@ -1,8 +1,6 @@
 package com.foodjou.fjapp.services;
 
-import com.foodjou.fjapp.domain.Food;
-import com.foodjou.fjapp.domain.FoodOrder;
-import com.foodjou.fjapp.domain.Order;
+import com.foodjou.fjapp.domain.*;
 import com.foodjou.fjapp.exception.CustomException;
 import com.foodjou.fjapp.repositories.FoodOrderRepository;
 import lombok.AllArgsConstructor;
@@ -16,6 +14,7 @@ import java.util.List;
 public class FoodOrderService {
 
     private final FoodOrderRepository foodOrderRepository;
+    private final RestaurantService restaurantService;
 
     public FoodOrder foodOrderValidation(String id){
         return foodOrderRepository.findById(Long.valueOf(id))
@@ -43,8 +42,9 @@ public class FoodOrderService {
         foodOrderRepository.delete(foodOrderValidation(id));
     }
 
-    public List<String> getFoodOrdersByRestaurantId(Long restaurantId) {
-        List<String> result = foodOrderRepository.findDistinctFoodNamesByRestaurantId(restaurantId);
+    public List<String> getFoodOrdersByRestaurant(User user) {
+        Restaurant restaurant = restaurantService.getRestaurantOwner(user);
+        List<String> result = foodOrderRepository.findDistinctFoodNamesByRestaurantId(restaurant.getId());
         if (result != null) return result;
         return new ArrayList<>();
 
