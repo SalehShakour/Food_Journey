@@ -1,14 +1,14 @@
 package com.foodjou.fjapp.controllers;
 
 import com.foodjou.fjapp.domain.Food;
+import com.foodjou.fjapp.domain.Restaurant;
 import com.foodjou.fjapp.domain.User;
-import com.foodjou.fjapp.dto.RestaurantResponseDTO;
+import com.foodjou.fjapp.dto.RestaurantMenuResponseDTO;
 import com.foodjou.fjapp.myEnum.OrderStatus;
 import com.foodjou.fjapp.services.FoodOrderService;
 import com.foodjou.fjapp.services.OrderService;
 import com.foodjou.fjapp.services.RestaurantService;
 import com.foodjou.fjapp.dto.entityDTO.RestaurantDTO;
-import jakarta.annotation.security.RolesAllowed;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -84,9 +84,17 @@ public class RestaurantController {
 
     }
 
+//    @PreAuthorize("hasAnyAuthority('ROLE_USER')")
+//    @GetMapping("/menu")
+//    public ResponseEntity<List<RestaurantMenuResponseDTO>> getAllRestaurantsWithMenu(@RequestParam(name = "name", required = false) String name,
+//                                                                                     @RequestParam(name = "address", required = false) String address) {
+//        return ResponseEntity.ok(restaurantService.getAllRestaurantsWithMenu(name, address));
+//    }
+
     @PreAuthorize("hasAnyAuthority('ROLE_USER')")
     @GetMapping
-    public ResponseEntity<List<RestaurantResponseDTO>> getAllRestaurantsWithMenu() {
-        return ResponseEntity.ok(restaurantService.getAllRestaurantsWithMenu());
+    public ResponseEntity<List<RestaurantDTO>> getAllRestaurants(@RequestParam(name = "name", required = false) String name,
+                                                              @RequestParam(name = "address", required = false) String address) {
+        return ResponseEntity.ok(restaurantService.getAllRestaurants(name,address));
     }
 }

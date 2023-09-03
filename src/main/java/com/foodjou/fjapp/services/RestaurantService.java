@@ -3,18 +3,16 @@ package com.foodjou.fjapp.services;
 import com.foodjou.fjapp.domain.Food;
 import com.foodjou.fjapp.domain.Restaurant;
 import com.foodjou.fjapp.domain.User;
-import com.foodjou.fjapp.dto.RestaurantResponseDTO;
 import com.foodjou.fjapp.exception.CustomException;
-import com.foodjou.fjapp.exception.DuplicateDataException;
 import com.foodjou.fjapp.mapper.entityMapper.MapStructRestaurant;
 import com.foodjou.fjapp.repositories.RestaurantRepository;
 import com.foodjou.fjapp.dto.entityDTO.RestaurantDTO;
 import com.foodjou.fjapp.repositories.UserRepository;
+import com.foodjou.fjapp.repositories.specification.RestaurantSpecifications;
 import lombok.AllArgsConstructor;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -62,20 +60,22 @@ public class RestaurantService {
         return restaurantRepository.findByOwner(currentUser).orElseThrow(() -> new CustomException("don't exist this restaurant"));
     }
 
-    public List<Restaurant> getAllRestaurants() {
-        return restaurantRepository.findAll();
+    public List<RestaurantDTO> getAllRestaurants(String name, String address) {
+        Specification<Restaurant> spec = RestaurantSpecifications.searchByFilters(name, address);
+        return mapStructRestaurant.restaurantListToRestaurantDtoList(restaurantRepository.findAll(spec));
+
     }
 
-    public List<RestaurantResponseDTO> getAllRestaurantsWithMenu() {
-        List<Restaurant> restaurants = getAllRestaurants();
-        List<RestaurantResponseDTO> responseDTOs = new ArrayList<>();
-        for (Restaurant restaurant : restaurants) {
-            RestaurantResponseDTO responseDTO = new RestaurantResponseDTO();
-            responseDTO.setRestaurantId(restaurant.getId());
-            responseDTO.setRestaurantName(restaurant.getRestaurantName());
-            responseDTO.setFoods(restaurant.getFoods());
-            responseDTOs.add(responseDTO);
-        }
-        return responseDTOs;
-    }
+//    public List<RestaurantMenuResponseDTO> getAllRestaurantsWithMenu(String name, String address) {
+//        List<Restaurant> restaurants = getAllRestaurants(name, address);
+//        List<RestaurantMenuResponseDTO> responseDTOs = new ArrayList<>();
+//        for (Restaurant restaurant : restaurants) {
+//            RestaurantMenuResponseDTO responseDTO = new RestaurantMenuResponseDTO();
+//            responseDTO.setRestaurantId(restaurant.getId());
+//            responseDTO.setRestaurantName(restaurant.getRestaurantName());
+//            responseDTO.setFoods(restaurant.getFoods());
+//            responseDTOs.add(responseDTO);
+//        }
+//        return responseDTOs;
+//    }
 }

@@ -1,5 +1,6 @@
 package com.foodjou.fjapp.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.foodjou.fjapp.domain.log.LoggingListener;
 import jakarta.persistence.*;

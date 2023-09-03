@@ -8,7 +8,7 @@ import java.util.List;
 
 @Getter
 @Setter
-public class RestaurantResponseDTO {
+public class RestaurantMenuResponseDTO {
     private String restaurantName;
     private Long restaurantId;
     private List<Food> foods;
