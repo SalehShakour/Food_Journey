@@ -86,8 +86,10 @@ public class RestaurantController {
     @PreAuthorize("hasAnyAuthority('ROLE_USER')")
     @GetMapping("/menu")
     public ResponseEntity<List<FoodDTO>> getAllRestaurantsWithMenu(@RequestParam(name = "name", required = false) String name,
-                                                                   @RequestParam(name = "address", required = false) String address) {
-        return ResponseEntity.ok(restaurantService.getAllRestaurantsWithMenu(name, address));
+                                                                   @RequestParam(name = "firstPrice", required = false) String firstPrice,
+                                                                   @RequestParam(name = "type", required = false) String type,
+                                                                   @RequestParam(name = "secondPrice", required = false) String secondPrice) {
+        return ResponseEntity.ok(restaurantService.getAllRestaurantsWithMenu(name,firstPrice,type,secondPrice));
     }
 
     @PreAuthorize("hasAnyAuthority('ROLE_USER')")

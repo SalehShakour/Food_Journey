@@ -5,11 +5,13 @@ import com.foodjou.fjapp.domain.Restaurant;
 import com.foodjou.fjapp.domain.User;
 import com.foodjou.fjapp.dto.entityDTO.FoodDTO;
 import com.foodjou.fjapp.exception.CustomException;
+import com.foodjou.fjapp.mapper.entityMapper.MapStructFood;
 import com.foodjou.fjapp.mapper.entityMapper.MapStructRestaurant;
 import com.foodjou.fjapp.repositories.FoodRepository;
 import com.foodjou.fjapp.repositories.RestaurantRepository;
 import com.foodjou.fjapp.dto.entityDTO.RestaurantDTO;
 import com.foodjou.fjapp.repositories.UserRepository;
+import com.foodjou.fjapp.repositories.specification.FoodSpecification;
 import com.foodjou.fjapp.repositories.specification.RestaurantSpecifications;
 import lombok.AllArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
@@ -24,6 +26,7 @@ public class RestaurantService {
     private final MapStructRestaurant mapStructRestaurant;
     private final UserRepository userRepository;
     private final FoodRepository foodRepository;
+    private final MapStructFood mapStructFood;
 
     public void addRestaurant(User owner, RestaurantDTO restaurantDTO) {
         Restaurant restaurant = mapStructRestaurant.restaurantDtoToRestaurant(restaurantDTO);
@@ -69,12 +72,8 @@ public class RestaurantService {
 
     }
 
-    public List<FoodDTO> getAllRestaurantsWithMenu(String name, String address) {
-        Specification<Restaurant> spec = RestaurantSpecifications.searchByFilters(name, address);
-        List<Restaurant> restaurants = restaurantRepository.findAll(spec);
-
-        List<FoodDTO> foodDTOList = foodRepository.findByRestaurant(FoodDTO.class);
-
-        return foodDTOList;
+    public List<FoodDTO> getAllRestaurantsWithMenu(String name, String firstPrice, String type, String secondPrice) {
+        Specification<Food> spec = FoodSpecification.searchByFilters(name, firstPrice, type, secondPrice);
+        return mapStructFood.toDTOList(foodRepository.findAll(spec));
     }
 }
