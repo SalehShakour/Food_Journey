@@ -8,6 +8,7 @@ import jakarta.annotation.security.RolesAllowed;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -26,7 +27,7 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
-    @RolesAllowed({"ROLE_ADMIN","ROLE_SUPER_ADMIN"})
+    @PreAuthorize("hasAnyAuthority('SUPER_ADMIN', 'ADMIN')")
     public ResponseEntity<String> deleteUserById(@PathVariable String id) {
         userService.deleteUserById(id);
         return ResponseEntity.status(HttpStatus.OK).body("User deleted successfully");

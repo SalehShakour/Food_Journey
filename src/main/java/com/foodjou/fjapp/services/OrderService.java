@@ -9,8 +9,6 @@ import com.foodjou.fjapp.repositories.FoodRepository;
 import com.foodjou.fjapp.repositories.OrderRepository;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -66,12 +64,32 @@ public class OrderService {
 
     public void changeOrderStatus(User currentUser, String orderId, OrderStatus newStatus) {
         Order order = orderValidation(orderId);
-        Restaurant restaurant = restaurantService.getRestaurantOwner(currentUser);
-        if (order.getFoodOrders().get(0).getFood().getRestaurant().getId() != restaurant.getId()){
+        Restaurant restaurant = order.getFoodOrders().get(0).getFood().getRestaurant();
+        if (!currentUser.getOwnedRestaurants().contains(restaurant)){
              throw new CustomException("you can't access orders");
         }
         order.setStatus(newStatus);
         orderRepository.save(order);
+    }
+
+    public String getOrderStatus(User currentUser,String orderId) {
+        Order order = orderValidation(orderId);
+        if (!Objects.equals(currentUser.getId(), order.getUser().getId())) {
+            throw new CustomException("You can't access this order");
+        }
+        OrderStatus orderStatus = order.getStatus();
+        return switch (orderStatus) {
+            case PENDING -> {
+                Double totalPrice = order.getTotalPrice();
+                yield "Your order is pending. Please pay " + totalPrice + " to complete it.";
+            }
+            case PAID ->
+                    "Your order has been paid. Please wait until it is delivered.";
+            case COMPLETED ->
+                    "Your order has been completed. Please rate us.";
+            case CANCELED ->
+                    "This order has been canceled.";
+        };
     }
 }
 

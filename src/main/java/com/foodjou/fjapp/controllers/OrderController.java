@@ -23,7 +23,6 @@ import java.util.Objects;
 public class OrderController {
     private final OrderService orderService;
 
-
     @PostMapping
     public ResponseEntity<String> createOrder(@AuthenticationPrincipal User currentUser, @RequestBody List<OrderDTO> orderDTOList) {
         if (orderDTOList==null || orderDTOList.isEmpty()){
@@ -34,25 +33,7 @@ public class OrderController {
     }
     @GetMapping("/{orderId}")
     public ResponseEntity<String> getOrderStatus(@AuthenticationPrincipal User currentUser, @PathVariable String orderId) {
-        Order order = orderService.getOrder(orderId);
-        if (!Objects.equals(currentUser.getId(), order.getUser().getId())) {
-            throw new CustomException("You can't access this order");
-        }
-        OrderStatus orderStatus = order.getStatus();
-
-        String responseMessage = switch (orderStatus) {
-            case PENDING -> {
-                Double totalPrice = order.getTotalPrice();
-                yield "Your order is pending. Please pay " + totalPrice + " to complete it.";
-            }
-            case PAID ->
-                    "Your order has been paid. Please wait until it is delivered.";
-            case COMPLETED ->
-                    "Your order has been completed. Please rate us.";
-            case CANCELED ->
-                    "This order has been canceled.";
-        };
-
+        String responseMessage = orderService.getOrderStatus(currentUser, orderId);
         return ResponseEntity.status(HttpStatus.OK).body(responseMessage);
     }
 }

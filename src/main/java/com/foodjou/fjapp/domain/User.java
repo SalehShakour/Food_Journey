@@ -46,6 +46,8 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Order> orders = new ArrayList<>();
 
+    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<Restaurant> ownedRestaurants = new ArrayList<>();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -95,17 +97,6 @@ public class User implements UserDetails {
         }
         return false;
     }
-    public boolean hasAnyRoles(Set<String> roleNames) {
-
-        Set<String> mappedRole = roles.stream()
-                .map(Role::getName)
-                .collect(Collectors.toSet());
-
-        roleNames.retainAll(mappedRole);
-
-
-        return !roleNames.isEmpty();
-    }
 
     public Long getRoleId(String roleName) {
         for (Role role : roles
@@ -132,6 +123,10 @@ public class User implements UserDetails {
         if (roleForDelete != null) {
             roles.remove(roleForDelete);
         }
+    }
+
+    public boolean hasRestaurant(Restaurant restaurant){
+        return ownedRestaurants.contains(restaurant);
     }
 
 

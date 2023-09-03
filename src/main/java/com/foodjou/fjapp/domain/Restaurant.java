@@ -1,5 +1,6 @@
 package com.foodjou.fjapp.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.foodjou.fjapp.domain.log.LoggingListener;
 import jakarta.persistence.*;
@@ -33,8 +34,9 @@ public class Restaurant {
     @JoinColumn(name = "owner_id")
     private User owner;
 
+    //todo why with cascade delete not working ?
     @JsonManagedReference
-    @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "restaurant", fetch = FetchType.EAGER)
     private List<Food> foods;
 
     @Transient

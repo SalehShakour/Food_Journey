@@ -1,44 +1,32 @@
 package com.foodjou.fjapp.controllers;
 
 import com.foodjou.fjapp.domain.Food;
-import com.foodjou.fjapp.domain.Restaurant;
 import com.foodjou.fjapp.domain.User;
-import com.foodjou.fjapp.dto.RestaurantResponseDTO;
+import com.foodjou.fjapp.dto.entityDTO.FoodDTO;
 import com.foodjou.fjapp.myEnum.OrderStatus;
 import com.foodjou.fjapp.services.FoodOrderService;
-import com.foodjou.fjapp.services.FoodService;
 import com.foodjou.fjapp.services.OrderService;
 import com.foodjou.fjapp.services.RestaurantService;
 import com.foodjou.fjapp.dto.entityDTO.RestaurantDTO;
-import jakarta.annotation.security.RolesAllowed;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashSet;
 import java.util.List;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/restaurants")
-@RolesAllowed({"ROLE_ADMIN", "ROLE_RESTAURANT_OWNER", "ROLE_SUPER_ADMIN"})
+@PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_RESTAURANT_OWNER', 'ROLE_SUPER_ADMIN')")
 @AllArgsConstructor
 public class RestaurantController {
 
     private final RestaurantService restaurantService;
     private final OrderService orderService;
     private final FoodOrderService foodOrderService;
-
-    public boolean hasAccessToRestaurant(String id, User currentUser) {
-        return currentUser.hasAnyRoles(new HashSet<>(List.of("ROLE_ADMIN", "ROLE_SUPER_ADMIN"))) ||
-                Long.valueOf(id).equals(restaurantService.getRestaurantOwner(currentUser).getId());
-    }
 
 
     @PostMapping
@@ -48,18 +36,18 @@ public class RestaurantController {
         return ResponseEntity.status(HttpStatus.CREATED).body("Restaurant created successfully");
     }
 
-    @PutMapping
+    @PutMapping("/{restaurantId:[0-9]+}")
     public ResponseEntity<String> updateRestaurant(@Valid @RequestBody RestaurantDTO restaurantDTO,
-                                                   @AuthenticationPrincipal User currentUser) {
-        restaurantService.updateRestaurant(currentUser, restaurantDTO);
+                                                   @AuthenticationPrincipal User currentUser,
+                                                   @PathVariable Long restaurantId) {
+        restaurantService.updateRestaurant(restaurantId,currentUser, restaurantDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body("Restaurant updated successfully");
     }
 
-
-    @RolesAllowed("ROLE_USER")
-    @GetMapping("/{id}")
-    public ResponseEntity<RestaurantDTO> getRestaurantById(@PathVariable String id) {
-        RestaurantDTO restaurantDTO = restaurantService.getRestaurant(id);
+    @PreAuthorize("hasAnyAuthority('ROLE_USER')")
+    @GetMapping("/{restaurantId}")
+    public ResponseEntity<RestaurantDTO> getRestaurantById(@PathVariable String restaurantId) {
+        RestaurantDTO restaurantDTO = restaurantService.getRestaurant(restaurantId);
         return ResponseEntity.status(HttpStatus.OK).body(restaurantDTO);
     }
 
@@ -70,36 +58,17 @@ public class RestaurantController {
     }
 
     @GetMapping("/{id}/menu")
-    @RolesAllowed("ROLE_USER")
-    public ResponseEntity<List<Food>> getRestaurantMenuById(
-            @PathVariable String id,
-            @RequestParam(required = false, defaultValue = "asc") String sort,
-            @RequestParam(required = false) String search) {
+    @PreAuthorize("hasAnyAuthority('ROLE_USER')")
+    public ResponseEntity<List<Food>> getRestaurantMenuById(@PathVariable String id) {
         List<Food> menu = restaurantService.getMenu(id);
-
-        if (search != null && !search.isEmpty()) {
-            menu = menu.stream()
-                    .filter(food -> food.getFoodName().toLowerCase().contains(search.toLowerCase()))
-                    .collect(Collectors.toList());
-        }
-
-        if ("desc".equalsIgnoreCase(sort)) {
-            menu.sort(Comparator.comparingDouble(Food::getPrice).reversed());
-        } else {
-            menu.sort(Comparator.comparingDouble(Food::getPrice));
-        }
-
         return ResponseEntity.status(HttpStatus.OK).body(menu);
     }
 
-
-    @GetMapping("/{id}/orders")
-    public ResponseEntity<List<String>> getAllOrder(@PathVariable String id,
+    @GetMapping("/{restaurantId:[0-9]+}/orders")
+    public ResponseEntity<List<String>> getAllOrder(@PathVariable Long restaurantId,
                                                     @AuthenticationPrincipal User currentUser) {
-        if (hasAccessToRestaurant(id, currentUser)) {
-            return ResponseEntity.status(HttpStatus.OK)
-                    .body(foodOrderService.getFoodOrdersByRestaurantId(Long.valueOf(id)));
-        } else return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).build();
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(foodOrderService.getFoodOrdersByRestaurantId(currentUser, restaurantId));
     }
 
     @PutMapping("/orders/{orderId}/status")
@@ -107,56 +76,26 @@ public class RestaurantController {
                                                     @AuthenticationPrincipal User currentUser,
                                                     @RequestParam OrderStatus newStatus
     ) {
-        restaurantService.getRestaurantOwner(currentUser);
+        restaurantService.findRestaurantsByOwner(currentUser);
 
         orderService.changeOrderStatus(currentUser, orderId, newStatus);
         return ResponseEntity.status(HttpStatus.OK).body("Order status successfully changed to " + newStatus);
 
     }
 
-    @RolesAllowed("ROLE_USER")
-    @GetMapping
-    public ResponseEntity<List<RestaurantResponseDTO>> getAllRestaurantsWithMenu(
-            @RequestParam(required = false, defaultValue = "asc") String sort,
-            @RequestParam(required = false) String restaurantSearch,
-            @RequestParam(required = false) String foodSearch) {
-        List<Restaurant> restaurants = restaurantService.getAllRestaurants();
-
-        if (restaurantSearch != null && !restaurantSearch.isEmpty()) {
-            String restaurantRegexPattern = ".*" + Pattern.quote(restaurantSearch) + ".*";
-            restaurants = restaurants.stream()
-                    .filter(restaurant -> restaurant.getRestaurantName().toLowerCase().matches(restaurantRegexPattern))
-                    .collect(Collectors.toList());
-        }
-
-        if ("desc".equalsIgnoreCase(sort)) {
-            restaurants.sort(Comparator.comparingDouble(Restaurant::getAveragePriceFood).reversed());
-        } else {
-            restaurants.sort(Comparator.comparingDouble(Restaurant::getAveragePriceFood));
-        }
-
-        List<RestaurantResponseDTO> responseDTOs = new ArrayList<>();
-
-        for (Restaurant restaurant : restaurants) {
-            RestaurantResponseDTO responseDTO = new RestaurantResponseDTO();
-            responseDTO.setRestaurantId(restaurant.getId());
-            responseDTO.setRestaurantName(restaurant.getRestaurantName());
-
-            if (foodSearch != null && !foodSearch.isEmpty()) {
-                String foodRegexPattern = ".*" + Pattern.quote(foodSearch) + ".*";
-                List<Food> filteredFoods = restaurant.getFoods().stream()
-                        .filter(food -> food.getFoodName().toLowerCase().matches(foodRegexPattern))
-                        .collect(Collectors.toList());
-                responseDTO.setFoods(filteredFoods);
-            } else {
-                responseDTO.setFoods(restaurant.getFoods());
-            }
-
-            responseDTOs.add(responseDTO);
-        }
-
-        return ResponseEntity.ok(responseDTOs);
+    @PreAuthorize("hasAnyAuthority('ROLE_USER')")
+    @GetMapping("/menu")
+    public ResponseEntity<List<FoodDTO>> getAllRestaurantsWithMenu(@RequestParam(name = "name", required = false) String name,
+                                                                   @RequestParam(name = "firstPrice", required = false) String firstPrice,
+                                                                   @RequestParam(name = "type", required = false) String type,
+                                                                   @RequestParam(name = "secondPrice", required = false) String secondPrice) {
+        return ResponseEntity.ok(restaurantService.getAllRestaurantsWithMenu(name,firstPrice,type,secondPrice));
     }
 
-
+    @PreAuthorize("hasAnyAuthority('ROLE_USER')")
+    @GetMapping
+    public ResponseEntity<List<RestaurantDTO>> getAllRestaurants(@RequestParam(name = "name", required = false) String name,
+                                                              @RequestParam(name = "address", required = false) String address) {
+        return ResponseEntity.ok(restaurantService.getAllRestaurants(name,address));
+    }
 }
