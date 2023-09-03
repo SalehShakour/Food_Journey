@@ -84,12 +84,12 @@ public class RestaurantController {
 
     }
 
-//    @PreAuthorize("hasAnyAuthority('ROLE_USER')")
-//    @GetMapping("/menu")
-//    public ResponseEntity<List<RestaurantMenuResponseDTO>> getAllRestaurantsWithMenu(@RequestParam(name = "name", required = false) String name,
-//                                                                                     @RequestParam(name = "address", required = false) String address) {
-//        return ResponseEntity.ok(restaurantService.getAllRestaurantsWithMenu(name, address));
-//    }
+    @PreAuthorize("hasAnyAuthority('ROLE_USER')")
+    @GetMapping("/menu")
+    public ResponseEntity<List<RestaurantMenuResponseDTO>> getAllRestaurantsWithMenu(@RequestParam(name = "name", required = false) String name,
+                                                                                     @RequestParam(name = "address", required = false) String address) {
+        return ResponseEntity.ok(restaurantService.getAllRestaurantsWithMenu(name, address));
+    }
 
     @PreAuthorize("hasAnyAuthority('ROLE_USER')")
     @GetMapping

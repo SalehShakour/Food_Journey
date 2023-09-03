@@ -3,6 +3,7 @@ package com.foodjou.fjapp.services;
 import com.foodjou.fjapp.domain.Food;
 import com.foodjou.fjapp.domain.Restaurant;
 import com.foodjou.fjapp.domain.User;
+import com.foodjou.fjapp.dto.RestaurantMenuResponseDTO;
 import com.foodjou.fjapp.exception.CustomException;
 import com.foodjou.fjapp.mapper.entityMapper.MapStructRestaurant;
 import com.foodjou.fjapp.repositories.RestaurantRepository;
@@ -13,6 +14,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -66,16 +68,17 @@ public class RestaurantService {
 
     }
 
-//    public List<RestaurantMenuResponseDTO> getAllRestaurantsWithMenu(String name, String address) {
-//        List<Restaurant> restaurants = getAllRestaurants(name, address);
-//        List<RestaurantMenuResponseDTO> responseDTOs = new ArrayList<>();
-//        for (Restaurant restaurant : restaurants) {
-//            RestaurantMenuResponseDTO responseDTO = new RestaurantMenuResponseDTO();
-//            responseDTO.setRestaurantId(restaurant.getId());
-//            responseDTO.setRestaurantName(restaurant.getRestaurantName());
-//            responseDTO.setFoods(restaurant.getFoods());
-//            responseDTOs.add(responseDTO);
-//        }
-//        return responseDTOs;
-//    }
+    public List<RestaurantMenuResponseDTO> getAllRestaurantsWithMenu(String name, String address) {
+        Specification<Restaurant> spec = RestaurantSpecifications.searchByFilters(name, address);
+        List<Restaurant> restaurants = restaurantRepository.findAll(spec);
+        List<RestaurantMenuResponseDTO> responseDTOs = new ArrayList<>();
+        for (Restaurant restaurant : restaurants) {
+            RestaurantMenuResponseDTO responseDTO = new RestaurantMenuResponseDTO();
+            responseDTO.setRestaurantId(restaurant.getId());
+            responseDTO.setRestaurantName(restaurant.getRestaurantName());
+            responseDTO.setFoods(restaurant.getFoods());
+            responseDTOs.add(responseDTO);
+        }
+        return responseDTOs;
+    }
 }
