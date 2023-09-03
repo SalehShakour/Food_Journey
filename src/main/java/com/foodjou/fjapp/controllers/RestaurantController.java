@@ -1,7 +1,6 @@
 package com.foodjou.fjapp.controllers;
 
 import com.foodjou.fjapp.domain.Food;
-import com.foodjou.fjapp.domain.Restaurant;
 import com.foodjou.fjapp.domain.User;
 import com.foodjou.fjapp.dto.RestaurantMenuResponseDTO;
 import com.foodjou.fjapp.myEnum.OrderStatus;
