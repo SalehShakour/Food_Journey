@@ -11,6 +11,7 @@ public interface MapStructFood {
     Food foodDtoToFood(FoodDTO foodDTO);
     @Mapping(source = "foodName",target = "foodName")
     FoodDTO foodToFoodDTO(Food food);
+    @Mapping(source = "foodDTO.id",target = "id")
     @Mapping(source = "foodDTO.foodName",target = "foodName")
     @Mapping(source = "foodDTO.price",target = "price")
     @Mapping(source = "foodDTO.description",target = "description")

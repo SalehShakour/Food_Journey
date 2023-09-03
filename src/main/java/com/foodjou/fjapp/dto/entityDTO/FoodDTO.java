@@ -5,7 +5,8 @@ import jakarta.validation.constraints.NotNull;
 
 
 
-public record FoodDTO(@NotBlank String foodName,
+public record FoodDTO(Long id,
+                      @NotBlank String foodName,
                       @NotNull Double price,
                       String description) {
 

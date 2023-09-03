@@ -4,8 +4,10 @@ import com.foodjou.fjapp.domain.Food;
 import com.foodjou.fjapp.domain.Restaurant;
 import com.foodjou.fjapp.domain.User;
 import com.foodjou.fjapp.dto.RestaurantMenuResponseDTO;
+import com.foodjou.fjapp.dto.entityDTO.FoodDTO;
 import com.foodjou.fjapp.exception.CustomException;
 import com.foodjou.fjapp.mapper.entityMapper.MapStructRestaurant;
+import com.foodjou.fjapp.repositories.FoodRepository;
 import com.foodjou.fjapp.repositories.RestaurantRepository;
 import com.foodjou.fjapp.dto.entityDTO.RestaurantDTO;
 import com.foodjou.fjapp.repositories.UserRepository;
@@ -23,6 +25,7 @@ public class RestaurantService {
     private final RestaurantRepository restaurantRepository;
     private final MapStructRestaurant mapStructRestaurant;
     private final UserRepository userRepository;
+    private final FoodRepository foodRepository;
 
     public void addRestaurant(User owner, RestaurantDTO restaurantDTO) {
         Restaurant restaurant = mapStructRestaurant.restaurantDtoToRestaurant(restaurantDTO);
@@ -73,10 +76,11 @@ public class RestaurantService {
         List<Restaurant> restaurants = restaurantRepository.findAll(spec);
         List<RestaurantMenuResponseDTO> responseDTOs = new ArrayList<>();
         for (Restaurant restaurant : restaurants) {
+            List<FoodDTO> foodDTOList = foodRepository.findByRestaurant(restaurant.getId(), FoodDTO.class);
             RestaurantMenuResponseDTO responseDTO = new RestaurantMenuResponseDTO();
             responseDTO.setRestaurantId(restaurant.getId());
             responseDTO.setRestaurantName(restaurant.getRestaurantName());
-            responseDTO.setFoods(restaurant.getFoods());
+            responseDTO.setFoods(foodDTOList);
             responseDTOs.add(responseDTO);
         }
         return responseDTOs;
