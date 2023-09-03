@@ -2,7 +2,7 @@ package com.foodjou.fjapp.controllers;
 
 import com.foodjou.fjapp.domain.Food;
 import com.foodjou.fjapp.domain.User;
-import com.foodjou.fjapp.dto.RestaurantMenuResponseDTO;
+import com.foodjou.fjapp.dto.entityDTO.FoodDTO;
 import com.foodjou.fjapp.myEnum.OrderStatus;
 import com.foodjou.fjapp.services.FoodOrderService;
 import com.foodjou.fjapp.services.OrderService;
@@ -85,8 +85,8 @@ public class RestaurantController {
 
     @PreAuthorize("hasAnyAuthority('ROLE_USER')")
     @GetMapping("/menu")
-    public ResponseEntity<List<RestaurantMenuResponseDTO>> getAllRestaurantsWithMenu(@RequestParam(name = "name", required = false) String name,
-                                                                                     @RequestParam(name = "address", required = false) String address) {
+    public ResponseEntity<List<FoodDTO>> getAllRestaurantsWithMenu(@RequestParam(name = "name", required = false) String name,
+                                                                   @RequestParam(name = "address", required = false) String address) {
         return ResponseEntity.ok(restaurantService.getAllRestaurantsWithMenu(name, address));
     }
 

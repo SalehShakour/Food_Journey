@@ -3,7 +3,6 @@ package com.foodjou.fjapp.services;
 import com.foodjou.fjapp.domain.Food;
 import com.foodjou.fjapp.domain.Restaurant;
 import com.foodjou.fjapp.domain.User;
-import com.foodjou.fjapp.dto.RestaurantMenuResponseDTO;
 import com.foodjou.fjapp.dto.entityDTO.FoodDTO;
 import com.foodjou.fjapp.exception.CustomException;
 import com.foodjou.fjapp.mapper.entityMapper.MapStructRestaurant;
@@ -16,7 +15,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -71,18 +69,12 @@ public class RestaurantService {
 
     }
 
-    public List<RestaurantMenuResponseDTO> getAllRestaurantsWithMenu(String name, String address) {
+    public List<FoodDTO> getAllRestaurantsWithMenu(String name, String address) {
         Specification<Restaurant> spec = RestaurantSpecifications.searchByFilters(name, address);
         List<Restaurant> restaurants = restaurantRepository.findAll(spec);
-        List<RestaurantMenuResponseDTO> responseDTOs = new ArrayList<>();
-        for (Restaurant restaurant : restaurants) {
-            List<FoodDTO> foodDTOList = foodRepository.findByRestaurant(restaurant.getId(), FoodDTO.class);
-            RestaurantMenuResponseDTO responseDTO = new RestaurantMenuResponseDTO();
-            responseDTO.setRestaurantId(restaurant.getId());
-            responseDTO.setRestaurantName(restaurant.getRestaurantName());
-            responseDTO.setFoods(foodDTOList);
-            responseDTOs.add(responseDTO);
-        }
-        return responseDTOs;
+
+        List<FoodDTO> foodDTOList = foodRepository.findByRestaurant(FoodDTO.class);
+
+        return foodDTOList;
     }
 }
