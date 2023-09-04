@@ -8,11 +8,10 @@ import com.foodjou.fjapp.services.FoodOrderService;
 import com.foodjou.fjapp.services.OrderService;
 import com.foodjou.fjapp.services.RestaurantService;
 import com.foodjou.fjapp.dto.entityDTO.RestaurantDTO;
-import com.foodjou.fjapp.services.cache.RestaurantCacheInitializer;
 import com.foodjou.fjapp.services.cache.RestaurantCacheService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
-import org.redisson.api.RSet;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -57,7 +56,7 @@ public class RestaurantController {
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_RESTAURANT_OWNER', 'ROLE_SUPER_ADMIN')")
-    public ResponseEntity<String> deleteRestaurantByID(@PathVariable String id) {
+    public ResponseEntity<String> deleteRestaurantById(@PathVariable String id) {
         restaurantService.deleteRestaurant(id);
         return ResponseEntity.status(HttpStatus.OK).body("Restaurant deleted successfully");
     }
