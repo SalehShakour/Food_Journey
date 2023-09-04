@@ -13,10 +13,6 @@ import java.util.List;
 @Service
 @AllArgsConstructor
 public class RestaurantCacheService {
-    private final RedissonClient redissonClient;
-    private final RestaurantRepository restaurantRepository;
-    private final MapStructRestaurant mapStructRestaurant;
-
 
     public RSet<RestaurantCacheInitializer.CacheData> getCache(){
         return RestaurantCacheInitializer.restaurantSet;

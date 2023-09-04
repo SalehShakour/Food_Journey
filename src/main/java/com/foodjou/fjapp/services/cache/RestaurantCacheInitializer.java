@@ -64,7 +64,8 @@ public class RestaurantCacheInitializer {
                         .toList();
 
 
-        restaurantSet = redissonClient.getSet("restaurantsCache", new TypedJsonJacksonCodec(com.foodjou.fjapp.services.cache.RestaurantCacheInitializer.CacheData.class));
+        restaurantSet = redissonClient.getSet("restaurantsCache", new TypedJsonJacksonCodec(CacheData.class));
+        restaurantSet.clear();
         restaurantSet.addAll(cacheDataList);
     }
 }
