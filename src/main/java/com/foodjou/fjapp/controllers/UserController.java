@@ -27,7 +27,7 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAnyAuthority('SUPER_ADMIN', 'ADMIN')")
+    @PreAuthorize("hasAnyAuthority('ROLE_SUPER_ADMIN', 'ROLE_ADMIN')")
     public ResponseEntity<String> deleteUserById(@PathVariable String id) {
         userService.deleteUserById(id);
         return ResponseEntity.status(HttpStatus.OK).body("User deleted successfully");

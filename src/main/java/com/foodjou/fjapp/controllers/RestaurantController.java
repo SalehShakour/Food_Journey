@@ -23,7 +23,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/restaurants")
-@PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_RESTAURANT_OWNER', 'ROLE_SUPER_ADMIN')")
 @AllArgsConstructor
 public class RestaurantController {
 
@@ -34,6 +33,7 @@ public class RestaurantController {
 
 
     @PostMapping
+    @PreAuthorize("hasAnyAuthority('ROLE_RESTAURANT_OWNER')")
     public ResponseEntity<String> addRestaurant(@Valid @RequestBody RestaurantDTO restaurantDTO,
                                                 @AuthenticationPrincipal User currentUser) {
         restaurantService.addRestaurant(currentUser, restaurantDTO);
@@ -41,6 +41,7 @@ public class RestaurantController {
     }
 
     @PutMapping("/{restaurantId:[0-9]+}")
+    @PreAuthorize("hasAnyAuthority('ROLE_RESTAURANT_OWNER')")
     public ResponseEntity<String> updateRestaurant(@Valid @RequestBody RestaurantDTO restaurantDTO,
                                                    @AuthenticationPrincipal User currentUser,
                                                    @PathVariable Long restaurantId) {
@@ -48,7 +49,6 @@ public class RestaurantController {
         return ResponseEntity.status(HttpStatus.CREATED).body("Restaurant updated successfully");
     }
 
-    @PreAuthorize("hasAnyAuthority('ROLE_USER')")
     @GetMapping("/{restaurantId}")
     public ResponseEntity<RestaurantDTO> getRestaurantById(@PathVariable String restaurantId) {
         RestaurantDTO restaurantDTO = restaurantService.getRestaurant(restaurantId);
@@ -56,19 +56,20 @@ public class RestaurantController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_RESTAURANT_OWNER', 'ROLE_SUPER_ADMIN')")
     public ResponseEntity<String> deleteRestaurantByID(@PathVariable String id) {
         restaurantService.deleteRestaurant(id);
         return ResponseEntity.status(HttpStatus.OK).body("Restaurant deleted successfully");
     }
 
     @GetMapping("/{id}/menu")
-    @PreAuthorize("hasAnyAuthority('ROLE_USER')")
     public ResponseEntity<List<Food>> getRestaurantMenuById(@PathVariable String id) {
         List<Food> menu = restaurantService.getMenu(id);
         return ResponseEntity.status(HttpStatus.OK).body(menu);
     }
 
     @GetMapping("/{restaurantId:[0-9]+}/orders")
+    @PreAuthorize("hasAnyAuthority('ROLE_RESTAURANT_OWNER')")
     public ResponseEntity<List<String>> getAllOrder(@PathVariable Long restaurantId,
                                                     @AuthenticationPrincipal User currentUser) {
         return ResponseEntity.status(HttpStatus.OK)
@@ -76,6 +77,7 @@ public class RestaurantController {
     }
 
     @PutMapping("/orders/{orderId}/status")
+    @PreAuthorize("hasAnyAuthority('ROLE_RESTAURANT_OWNER')")
     public ResponseEntity<String> changeOrderStatus(@PathVariable String orderId,
                                                     @AuthenticationPrincipal User currentUser,
                                                     @RequestParam OrderStatus newStatus
@@ -87,7 +89,6 @@ public class RestaurantController {
 
     }
 
-    @PreAuthorize("hasAnyAuthority('ROLE_USER')")
     @GetMapping("/menu")
     public ResponseEntity<List<FoodDTO>> getAllRestaurantsWithMenu(@RequestParam(name = "name", required = false) String name,
                                                                    @RequestParam(name = "firstPrice", required = false) String firstPrice,
@@ -96,14 +97,12 @@ public class RestaurantController {
         return ResponseEntity.ok(restaurantService.getAllRestaurantsWithMenu(name,firstPrice,type,secondPrice));
     }
 
-    @PreAuthorize("hasAnyAuthority('ROLE_USER')")
     @GetMapping
     public ResponseEntity<List<RestaurantDTO>> getAllRestaurants(@RequestParam(name = "name", required = false) String name,
                                                               @RequestParam(name = "address", required = false) String address) {
         return ResponseEntity.ok(restaurantService.getAllRestaurants(name,address));
     }
 
-    @PreAuthorize("hasAnyAuthority('ROLE_USER')")
     @GetMapping("/cache")
     public ResponseEntity<RSet<RestaurantDTO>> getAllRestaurantsFromCache() {
         return ResponseEntity.ok(restaurantCacheService.getCache());

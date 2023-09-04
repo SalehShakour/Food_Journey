@@ -25,7 +25,7 @@ public class AdminController {
     private static final Logger logger = LoggerFactory.getLogger(AdminController.class);
 
     @PutMapping("/admin/add/{userId}")
-    @PreAuthorize("hasAnyAuthority('SUPER_ADMIN')")
+    @PreAuthorize("hasAnyAuthority('ROLE_SUPER_ADMIN')")
     public void addAdminRole(@PathVariable String userId){
         User user = userRepository.findById(Long.valueOf(userId))
                 .orElseThrow(()->new CustomException("User not found by email"));
@@ -34,7 +34,7 @@ public class AdminController {
     }
 
     @PutMapping("/admin/remove/{userId}")
-    @PreAuthorize("hasAnyAuthority('SUPER_ADMIN')")
+    @PreAuthorize("hasAnyAuthority('ROLE_SUPER_ADMIN')")
     public void removeAdminRole(@PathVariable String userId){
         User user = userRepository.findById(Long.valueOf(userId))
                 .orElseThrow(()->new CustomException("User not found by email"));
@@ -43,7 +43,7 @@ public class AdminController {
     }
 
     @PutMapping("/owner/add/{userId}")
-    @PreAuthorize("hasAnyAuthority('SUPER_ADMIN', 'ADMIN')")
+    @PreAuthorize("hasAnyAuthority('ROLE_SUPER_ADMIN', 'ROLE_ADMIN')")
     public void addRestaurantOwnerRole(@PathVariable String userId){
         User user = userRepository.findById(Long.valueOf(userId))
                 .orElseThrow(()->new CustomException("User not found by Id"));
@@ -52,7 +52,7 @@ public class AdminController {
     }
 
     @PutMapping("/owner/remove/{userId}")
-    @PreAuthorize("hasAnyAuthority('SUPER_ADMIN', 'ADMIN')")
+    @PreAuthorize("hasAnyAuthority('ROLE_SUPER_ADMIN', 'ROLE_ADMIN')")
     public void removeRestaurantOwnerRole(@PathVariable String userId){
         User user = userRepository.findById(Long.valueOf(userId))
                 .orElseThrow(()->new CustomException("User not found by email"));
@@ -61,7 +61,7 @@ public class AdminController {
     }
 
     @GetMapping("/admin/users/all")
-    @PreAuthorize("hasAnyAuthority('SUPER_ADMIN', 'ADMIN')")
+    @PreAuthorize("hasAnyAuthority('ROLE_SUPER_ADMIN', 'ROLE_ADMIN')")
     public ResponseEntity<String> getAllUser(){
         return ResponseEntity.status(HttpStatus.OK).body(userService.getAllUser().toString());
     }
