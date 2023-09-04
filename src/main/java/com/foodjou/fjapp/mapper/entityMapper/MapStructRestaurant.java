@@ -1,6 +1,8 @@
 package com.foodjou.fjapp.mapper.entityMapper;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.foodjou.fjapp.domain.Restaurant;
 import com.foodjou.fjapp.dto.entityDTO.RestaurantDTO;
+import com.foodjou.fjapp.exception.CustomException;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -9,6 +11,8 @@ import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface MapStructRestaurant {
+    ObjectMapper objectMapper = new ObjectMapper();
+
     @Mapping(source = "restaurantName", target = "restaurantName")
     Restaurant restaurantDtoToRestaurant(RestaurantDTO restaurantDTO);
     @Mapping(source = "restaurantName", target = "restaurantName")

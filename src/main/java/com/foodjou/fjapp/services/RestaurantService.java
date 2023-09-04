@@ -13,6 +13,7 @@ import com.foodjou.fjapp.dto.entityDTO.RestaurantDTO;
 import com.foodjou.fjapp.repositories.UserRepository;
 import com.foodjou.fjapp.repositories.specification.FoodSpecification;
 import com.foodjou.fjapp.repositories.specification.RestaurantSpecifications;
+import com.foodjou.fjapp.services.cache.RestaurantCacheService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -27,6 +28,7 @@ public class RestaurantService {
     private final UserRepository userRepository;
     private final FoodRepository foodRepository;
     private final MapStructFood mapStructFood;
+    private final RestaurantCacheService restaurantCacheService;
 
     public void addRestaurant(User owner, RestaurantDTO restaurantDTO) {
         Restaurant restaurant = mapStructRestaurant.restaurantDtoToRestaurant(restaurantDTO);

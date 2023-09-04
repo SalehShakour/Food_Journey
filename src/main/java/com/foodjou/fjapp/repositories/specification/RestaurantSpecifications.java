@@ -1,9 +1,7 @@
 package com.foodjou.fjapp.repositories.specification;
 
 import com.foodjou.fjapp.domain.Restaurant;
-import com.foodjou.fjapp.dto.entityDTO.RestaurantDTO;
 import jakarta.persistence.criteria.Predicate;
-import jakarta.persistence.criteria.JoinType;
 import org.springframework.data.jpa.domain.Specification;
 
 public class RestaurantSpecifications {

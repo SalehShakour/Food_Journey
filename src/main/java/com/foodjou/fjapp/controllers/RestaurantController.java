@@ -8,8 +8,11 @@ import com.foodjou.fjapp.services.FoodOrderService;
 import com.foodjou.fjapp.services.OrderService;
 import com.foodjou.fjapp.services.RestaurantService;
 import com.foodjou.fjapp.dto.entityDTO.RestaurantDTO;
+import com.foodjou.fjapp.services.cache.RestaurantCacheInitializer;
+import com.foodjou.fjapp.services.cache.RestaurantCacheService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.redisson.api.RSet;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -25,6 +28,7 @@ import java.util.List;
 public class RestaurantController {
 
     private final RestaurantService restaurantService;
+    private final RestaurantCacheService restaurantCacheService;
     private final OrderService orderService;
     private final FoodOrderService foodOrderService;
 
@@ -97,5 +101,11 @@ public class RestaurantController {
     public ResponseEntity<List<RestaurantDTO>> getAllRestaurants(@RequestParam(name = "name", required = false) String name,
                                                               @RequestParam(name = "address", required = false) String address) {
         return ResponseEntity.ok(restaurantService.getAllRestaurants(name,address));
+    }
+
+    @PreAuthorize("hasAnyAuthority('ROLE_USER')")
+    @GetMapping("/cache")
+    public ResponseEntity<RSet<RestaurantCacheInitializer.CacheData>> getAllRestaurantsFromCache() {
+        return ResponseEntity.ok(restaurantCacheService.getCache());
     }
 }
