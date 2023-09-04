@@ -100,11 +100,6 @@ public class RestaurantController {
     @GetMapping
     public ResponseEntity<List<RestaurantDTO>> getAllRestaurants(@RequestParam(name = "name", required = false) String name,
                                                               @RequestParam(name = "address", required = false) String address) {
-        return ResponseEntity.ok(restaurantService.getAllRestaurants(name,address));
-    }
-
-    @GetMapping("/cache")
-    public ResponseEntity<RSet<RestaurantDTO>> getAllRestaurantsFromCache() {
-        return ResponseEntity.ok(restaurantCacheService.getCache());
+        return ResponseEntity.ok(restaurantCacheService.getCache(name, address));
     }
 }

@@ -13,6 +13,7 @@ import com.foodjou.fjapp.dto.entityDTO.RestaurantDTO;
 import com.foodjou.fjapp.repositories.UserRepository;
 import com.foodjou.fjapp.repositories.specification.FoodSpecification;
 import com.foodjou.fjapp.repositories.specification.RestaurantSpecifications;
+import com.foodjou.fjapp.services.cache.RestaurantCacheInitializer;
 import com.foodjou.fjapp.services.cache.RestaurantCacheService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
@@ -28,13 +29,13 @@ public class RestaurantService {
     private final UserRepository userRepository;
     private final FoodRepository foodRepository;
     private final MapStructFood mapStructFood;
-    private final RestaurantCacheService restaurantCacheService;
 
     public void addRestaurant(User owner, RestaurantDTO restaurantDTO) {
         Restaurant restaurant = mapStructRestaurant.restaurantDtoToRestaurant(restaurantDTO);
         restaurant.setOwner(owner);
         restaurantRepository.save(restaurant);
         userRepository.save(owner);
+        RestaurantCacheInitializer.restaurantSet.add(mapStructRestaurant.restaurantToRestaurantDTO(restaurant));
     }
 
     public Restaurant restaurantValidation(String restaurantId) {
@@ -47,7 +48,11 @@ public class RestaurantService {
     }
 
     public void deleteRestaurant(String id) {
-        restaurantRepository.delete(restaurantValidation(id));
+        Restaurant tempRestaurant = restaurantValidation(id);
+        restaurantRepository.delete(tempRestaurant);
+        RestaurantCacheInitializer.restaurantSet.remove(mapStructRestaurant.restaurantToRestaurantDTO(tempRestaurant));
+
+
     }
 
     public void updateRestaurant(Long restaurantId, User user, RestaurantDTO updatedRestaurantDTO) {
@@ -55,8 +60,10 @@ public class RestaurantService {
         Restaurant existingRestaurant = restaurantList.stream()
                 .filter(restaurant -> restaurant.getId() == restaurantId)
                 .findFirst().orElseThrow(() -> new CustomException("List of restaurant is null"));
+        RestaurantCacheInitializer.restaurantSet.remove(mapStructRestaurant.restaurantToRestaurantDTO(existingRestaurant));
         existingRestaurant = mapStructRestaurant.updateRestaurantDtoToRestaurant(updatedRestaurantDTO, existingRestaurant);
         restaurantRepository.save(existingRestaurant);
+        RestaurantCacheInitializer.restaurantSet.add(mapStructRestaurant.restaurantToRestaurantDTO(existingRestaurant));
     }
 
     public List<Food> getMenu(String restaurantId) {

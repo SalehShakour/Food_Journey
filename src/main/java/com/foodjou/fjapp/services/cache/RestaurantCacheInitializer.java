@@ -32,14 +32,6 @@ public class RestaurantCacheInitializer {
     public static RSet<RestaurantDTO> restaurantSet;
 
 
-    private RestaurantDTO convertRestaurantToRestaurantDTO(Restaurant restaurant) {
-
-        return RestaurantDTO.builder()
-                .restaurantName(restaurant.getRestaurantName())
-                .address(restaurant.getAddress())
-                .phoneNumber(restaurant.getPhoneNumber())
-                .build();
-    }
     @PostConstruct
     public void init() {
         restaurantSet = redissonClient.getSet("restaurantsCache", new TypedJsonJacksonCodec(RestaurantDTO.class));
@@ -54,7 +46,13 @@ public class RestaurantCacheInitializer {
     public void cacheAllRestaurants() {
         List<Restaurant> restaurants = restaurantRepository.findAll();
         List<RestaurantDTO> restaurantDTOList = restaurants.stream()
-                .map(this::convertRestaurantToRestaurantDTO)
+                .map(restaurant ->
+                    RestaurantDTO.builder()
+                            .restaurantName(restaurant.getRestaurantName())
+                            .address(restaurant.getAddress())
+                            .phoneNumber(restaurant.getPhoneNumber())
+                            .build()
+                )
                 .toList();
 
         restaurantSet.clear();

@@ -46,7 +46,7 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Order> orders = new ArrayList<>();
 
-    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "owner", fetch = FetchType.EAGER)
     private List<Restaurant> ownedRestaurants = new ArrayList<>();
 
     @Override
