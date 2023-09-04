@@ -8,6 +8,7 @@ import lombok.Getter;
 import org.redisson.api.RSet;
 import org.redisson.api.RedissonClient;
 import org.redisson.codec.TypedJsonJacksonCodec;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 
@@ -55,18 +56,19 @@ public class RestaurantCacheInitializer {
         return cacheData;
     }
 
-    @PostConstruct
     public void cacheAllRestaurants() {
-
         List<Restaurant> restaurants = restaurantRepository.findAll();
         List<CacheData> cacheDataList = restaurants.stream()
-                        .map(this::convertRestaurantToCacheData)
-                        .toList();
-
+                .map(this::convertRestaurantToCacheData)
+                .toList();
 
         restaurantSet = redissonClient.getSet("restaurantsCache", new TypedJsonJacksonCodec(CacheData.class));
         restaurantSet.clear();
         restaurantSet.addAll(cacheDataList);
+    }
+    @Scheduled(cron = "0 4 13 * * ?")
+    public void scheduledCacheUpdate() {
+        cacheAllRestaurants();
     }
 }
 
