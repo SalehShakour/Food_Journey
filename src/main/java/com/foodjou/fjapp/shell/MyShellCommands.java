@@ -13,7 +13,7 @@ public class MyShellCommands {
 
     @ShellMethod("Manually update the restaurant cache")
     public String updateRestaurantCache() {
-        restaurantCacheInitializer.cacheAllRestaurants(); // Invoke the cache update method
+        restaurantCacheInitializer.cacheAllRestaurants();
         return "Restaurant cache has been updated.";
     }
 }
