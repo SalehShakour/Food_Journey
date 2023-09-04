@@ -1,6 +1,7 @@
 package com.foodjou.fjapp.services.cache;
 
 import com.foodjou.fjapp.domain.Restaurant;
+import com.foodjou.fjapp.dto.entityDTO.RestaurantDTO;
 import com.foodjou.fjapp.repositories.RestaurantRepository;
 import com.foodjou.fjapp.services.RestaurantService;
 import lombok.AllArgsConstructor;
@@ -9,6 +10,8 @@ import org.redisson.api.RSet;
 import org.redisson.api.RedissonClient;
 import org.redisson.codec.TypedJsonJacksonCodec;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.shell.standard.ShellComponent;
+import org.springframework.shell.standard.ShellMethod;
 import org.springframework.stereotype.Component;
 
 
@@ -21,54 +24,41 @@ import java.util.List;
 @Component
 @AllArgsConstructor
 @Getter
+@ShellComponent
 public class RestaurantCacheInitializer {
     private final RedissonClient redissonClient;
     private final RestaurantService restaurantService;
     private final RestaurantRepository restaurantRepository;
-    public static RSet<CacheData> restaurantSet;
+    public static RSet<RestaurantDTO> restaurantSet;
 
 
-    @Getter
-    public static class CacheData {
+    private RestaurantDTO convertRestaurantToRestaurantDTO(Restaurant restaurant) {
 
-        public void setRestaurantName(String restaurantName) {
-            this.restaurantName = restaurantName;
-        }
-
-        public void setAddress(String address) {
-            this.address = address;
-        }
-
-        public void setPhoneNumber(String phoneNumber) {
-            this.phoneNumber = phoneNumber;
-        }
-
-        private String restaurantName;
-        private String address;
-        private String phoneNumber;
+        return RestaurantDTO.builder()
+                .restaurantName(restaurant.getRestaurantName())
+                .address(restaurant.getAddress())
+                .phoneNumber(restaurant.getPhoneNumber())
+                .build();
+    }
+    @PostConstruct
+    public void init() {
+        restaurantSet = redissonClient.getSet("restaurantsCache", new TypedJsonJacksonCodec(RestaurantDTO.class));
     }
 
-    private CacheData convertRestaurantToCacheData(Restaurant restaurant) {
-        CacheData cacheData = new CacheData();
-        cacheData.setRestaurantName(restaurant.getRestaurantName());
-        cacheData.setPhoneNumber(restaurant.getPhoneNumber());
-        cacheData.setAddress(restaurant.getAddress());
-        return cacheData;
+    @Scheduled(cron = "0 4 13 * * ?")
+    @ShellMethod("Manually update the restaurant cache")
+    public void scheduledCacheUpdate() {
+        cacheAllRestaurants();
     }
 
     public void cacheAllRestaurants() {
         List<Restaurant> restaurants = restaurantRepository.findAll();
-        List<CacheData> cacheDataList = restaurants.stream()
-                .map(this::convertRestaurantToCacheData)
+        List<RestaurantDTO> restaurantDTOList = restaurants.stream()
+                .map(this::convertRestaurantToRestaurantDTO)
                 .toList();
 
-        restaurantSet = redissonClient.getSet("restaurantsCache", new TypedJsonJacksonCodec(CacheData.class));
         restaurantSet.clear();
-        restaurantSet.addAll(cacheDataList);
-    }
-    @Scheduled(cron = "0 4 13 * * ?")
-    public void scheduledCacheUpdate() {
-        cacheAllRestaurants();
+        restaurantSet.addAll(restaurantDTOList);
     }
 }
 

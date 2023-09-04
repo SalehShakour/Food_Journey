@@ -1,6 +1,7 @@
 package com.foodjou.fjapp.services.cache;
 
 import com.foodjou.fjapp.domain.Restaurant;
+import com.foodjou.fjapp.dto.entityDTO.RestaurantDTO;
 import com.foodjou.fjapp.mapper.entityMapper.MapStructRestaurant;
 import com.foodjou.fjapp.repositories.RestaurantRepository;
 import lombok.AllArgsConstructor;
@@ -14,7 +15,7 @@ import java.util.List;
 @AllArgsConstructor
 public class RestaurantCacheService {
 
-    public RSet<RestaurantCacheInitializer.CacheData> getCache(){
+    public RSet<RestaurantDTO> getCache(){
         return RestaurantCacheInitializer.restaurantSet;
 
     }

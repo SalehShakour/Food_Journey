@@ -105,7 +105,7 @@ public class RestaurantController {
 
     @PreAuthorize("hasAnyAuthority('ROLE_USER')")
     @GetMapping("/cache")
-    public ResponseEntity<RSet<RestaurantCacheInitializer.CacheData>> getAllRestaurantsFromCache() {
+    public ResponseEntity<RSet<RestaurantDTO>> getAllRestaurantsFromCache() {
         return ResponseEntity.ok(restaurantCacheService.getCache());
     }
 }
