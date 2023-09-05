@@ -44,7 +44,7 @@ public class RestaurantController {
     public ResponseEntity<String> updateRestaurant(@RequestBody RestaurantDTO restaurantDTO,
                                                    @AuthenticationPrincipal User currentUser,
                                                    @PathVariable Long restaurantId) {
-        restaurantService.updateRestaurant(restaurantId,currentUser, restaurantDTO);
+        restaurantService.updateRestaurant(restaurantId, restaurantDTO, currentUser);
         return ResponseEntity.status(HttpStatus.CREATED).body("Restaurant updated successfully");
     }
 
@@ -93,12 +93,12 @@ public class RestaurantController {
                                                                    @RequestParam(name = "firstPrice", required = false) String firstPrice,
                                                                    @RequestParam(name = "type", required = false) String type,
                                                                    @RequestParam(name = "secondPrice", required = false) String secondPrice) {
-        return ResponseEntity.ok(restaurantService.getAllRestaurantsWithMenu(name,firstPrice,type,secondPrice));
+        return ResponseEntity.ok(restaurantService.getAllRestaurantsWithMenu(name, firstPrice, type, secondPrice));
     }
 
     @GetMapping
     public ResponseEntity<List<RestaurantDTO>> getAllRestaurants(@RequestParam(name = "name", required = false) String name,
-                                                              @RequestParam(name = "address", required = false) String address) {
+                                                                 @RequestParam(name = "address", required = false) String address) {
         return ResponseEntity.ok(restaurantCacheService.getCache(name, address));
     }
 }
