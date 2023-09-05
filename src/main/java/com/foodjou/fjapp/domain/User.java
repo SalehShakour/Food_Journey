@@ -29,7 +29,7 @@ public class User implements UserDetails {
     private Long id;
     @Column(name = "email")
     private String email;
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     @JoinColumn(name = "user_id")
     private Set<Role> roles = new HashSet<>();
     @Column(name = "firstname")
@@ -43,10 +43,10 @@ public class User implements UserDetails {
     @Column(name = "address")
     private String address;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user",cascade = CascadeType.REMOVE)
     private List<Order> orders = new ArrayList<>();
 
-    @OneToMany(mappedBy = "owner", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "owner", fetch = FetchType.EAGER,cascade = CascadeType.REMOVE)
     private List<Restaurant> ownedRestaurants = new ArrayList<>();
 
     @Override

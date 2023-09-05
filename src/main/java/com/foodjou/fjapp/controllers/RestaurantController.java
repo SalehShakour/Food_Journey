@@ -55,7 +55,7 @@ public class RestaurantController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_RESTAURANT_OWNER', 'ROLE_SUPER_ADMIN')")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_SUPER_ADMIN')")
     public ResponseEntity<String> deleteRestaurantById(@PathVariable String id) {
         restaurantService.deleteRestaurant(id);
         return ResponseEntity.status(HttpStatus.OK).body("Restaurant deleted successfully");
