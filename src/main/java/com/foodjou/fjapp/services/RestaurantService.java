@@ -61,7 +61,14 @@ public class RestaurantService {
                 .filter(restaurant -> restaurant.getId() == restaurantId)
                 .findFirst().orElseThrow(() -> new CustomException("List of restaurant is null"));
         RestaurantCacheInitializer.restaurantSet.remove(mapStructRestaurant.restaurantToRestaurantDTO(existingRestaurant));
-        existingRestaurant = mapStructRestaurant.updateRestaurantDtoToRestaurant(updatedRestaurantDTO, existingRestaurant);
+
+        existingRestaurant.setRestaurantName(mapStructRestaurant.updateField(
+                existingRestaurant.getRestaurantName(), updatedRestaurantDTO.getRestaurantName()));
+        existingRestaurant.setAddress(mapStructRestaurant.updateField(
+                existingRestaurant.getAddress(), updatedRestaurantDTO.getAddress()));
+        existingRestaurant.setPhoneNumber(mapStructRestaurant.updateField(
+                existingRestaurant.getPhoneNumber(), updatedRestaurantDTO.getPhoneNumber()));
+
         restaurantRepository.save(existingRestaurant);
         RestaurantCacheInitializer.restaurantSet.add(mapStructRestaurant.restaurantToRestaurantDTO(existingRestaurant));
     }

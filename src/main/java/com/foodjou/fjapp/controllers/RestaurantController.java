@@ -41,7 +41,7 @@ public class RestaurantController {
 
     @PutMapping("/{restaurantId:[0-9]+}")
     @PreAuthorize("hasAnyAuthority('ROLE_RESTAURANT_OWNER')")
-    public ResponseEntity<String> updateRestaurant(@Valid @RequestBody RestaurantDTO restaurantDTO,
+    public ResponseEntity<String> updateRestaurant(@RequestBody RestaurantDTO restaurantDTO,
                                                    @AuthenticationPrincipal User currentUser,
                                                    @PathVariable Long restaurantId) {
         restaurantService.updateRestaurant(restaurantId,currentUser, restaurantDTO);
