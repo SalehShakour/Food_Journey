@@ -13,11 +13,16 @@ import com.foodjou.fjapp.dto.entityDTO.RestaurantDTO;
 import com.foodjou.fjapp.repositories.UserRepository;
 import com.foodjou.fjapp.repositories.specification.FoodSpecification;
 import com.foodjou.fjapp.repositories.specification.RestaurantSpecifications;
+import com.foodjou.fjapp.services.cache.RestaurantCacheInitializer;
+import com.foodjou.fjapp.services.cache.RestaurantCacheService;
 import lombok.AllArgsConstructor;
+import org.redisson.api.RLock;
+import org.redisson.api.RedissonClient;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @Service
 @AllArgsConstructor
@@ -27,12 +32,14 @@ public class RestaurantService {
     private final UserRepository userRepository;
     private final FoodRepository foodRepository;
     private final MapStructFood mapStructFood;
+    private final RedissonClient redissonClient;
 
     public void addRestaurant(User owner, RestaurantDTO restaurantDTO) {
         Restaurant restaurant = mapStructRestaurant.restaurantDtoToRestaurant(restaurantDTO);
         restaurant.setOwner(owner);
         restaurantRepository.save(restaurant);
         userRepository.save(owner);
+        RestaurantCacheInitializer.restaurantSet.add(mapStructRestaurant.restaurantToRestaurantDTO(restaurant));
     }
 
     public Restaurant restaurantValidation(String restaurantId) {
@@ -45,16 +52,36 @@ public class RestaurantService {
     }
 
     public void deleteRestaurant(String id) {
-        restaurantRepository.delete(restaurantValidation(id));
+        Restaurant tempRestaurant = restaurantValidation(id);
+        restaurantRepository.delete(tempRestaurant);
+        RestaurantCacheInitializer.restaurantSet.remove(mapStructRestaurant.restaurantToRestaurantDTO(tempRestaurant));
+
+
     }
 
-    public void updateRestaurant(Long restaurantId, User user, RestaurantDTO updatedRestaurantDTO) {
+    public void updateRestaurant(Long restaurantId, RestaurantDTO updatedRestaurantDTO, User user) {
         List<Restaurant> restaurantList = findRestaurantsByOwner(user);
         Restaurant existingRestaurant = restaurantList.stream()
                 .filter(restaurant -> restaurant.getId() == restaurantId)
-                .findFirst().orElseThrow(() -> new CustomException("List of restaurant is null"));
-        existingRestaurant = mapStructRestaurant.updateRestaurantDtoToRestaurant(updatedRestaurantDTO, existingRestaurant);
-        restaurantRepository.save(existingRestaurant);
+                .findFirst().orElseThrow(() -> new CustomException("List of restaurants is null"));
+
+        RLock lock = redissonClient.getFairLock("restaurantShowLock");
+        try {
+            // acquire the lock
+            lock.lock(10, TimeUnit.SECONDS);
+            RestaurantCacheInitializer.restaurantSet.remove(mapStructRestaurant.restaurantToRestaurantDTO(existingRestaurant));
+            existingRestaurant.setRestaurantName(mapStructRestaurant.updateField(
+                    existingRestaurant.getRestaurantName(), updatedRestaurantDTO.getRestaurantName()));
+            existingRestaurant.setAddress(mapStructRestaurant.updateField(
+                    existingRestaurant.getAddress(), updatedRestaurantDTO.getAddress()));
+            existingRestaurant.setPhoneNumber(mapStructRestaurant.updateField(
+                    existingRestaurant.getPhoneNumber(), updatedRestaurantDTO.getPhoneNumber()));
+            restaurantRepository.save(existingRestaurant);
+            RestaurantCacheInitializer.restaurantSet.add(mapStructRestaurant.restaurantToRestaurantDTO(existingRestaurant));
+        } finally {
+            // release the lock
+            lock.unlock();
+        }
     }
 
     public List<Food> getMenu(String restaurantId) {
