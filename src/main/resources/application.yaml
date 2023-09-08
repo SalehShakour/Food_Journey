@@ -10,3 +10,7 @@ spring:
   data:
     redis:
       url: redis://127.0.0.1:6379
+
+logging:
+  config: src/main/resources/logback-spring.xml
+

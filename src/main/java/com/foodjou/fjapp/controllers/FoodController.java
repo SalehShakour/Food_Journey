@@ -13,7 +13,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDateTime;
 
 @RestController
 @RequestMapping("/api/foods")
@@ -23,6 +27,8 @@ public class FoodController {
 
     private final FoodService foodService;
     private final UserService userService;
+    private static final Logger foodControllerLogger = LoggerFactory.getLogger(FoodController.class);
+
 
 
     @PostMapping("/{restaurantId:[0-9]+}")
@@ -36,9 +42,12 @@ public class FoodController {
 
     @PreAuthorize("hasAnyAuthority('ROLE_USER')")
     @GetMapping("/{foodId}")
-    public ResponseEntity<Food> getFoodById(@PathVariable String foodId) {
+    public ResponseEntity<Food> getFoodById(@PathVariable String foodId,
+                                            @AuthenticationPrincipal User currentUser) {
+        Food food = foodService.getFoodById(foodId);
+        foodControllerLogger.info("Received a request to get food with ID: {}. Requester: {}. Timestamp: {}",
+                food.getId(), currentUser.getUsername(), LocalDateTime.now());
         return ResponseEntity.status(HttpStatus.OK).body(foodService.getFoodById(foodId));
-
     }
 
     @DeleteMapping("/{restaurantId:[0-9]+}/{foodId:[0-9]+}")
