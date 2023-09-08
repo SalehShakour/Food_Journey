@@ -16,9 +16,6 @@
     <logger name="com.foodjou.fjapp.rabbitmq.RabbitMQProducer" level="INFO">
         <appender-ref ref="FILE"/>
     </logger>
-<!--    <logger name="com.foodjou.fjapp.controllers.FoodController" level="INFO">-->
-<!--        <appender-ref ref="RABBITMQ"/>-->
-<!--    </logger>-->
 
     <root level="INFO">
         <appender-ref ref="CONSOLE"/>
