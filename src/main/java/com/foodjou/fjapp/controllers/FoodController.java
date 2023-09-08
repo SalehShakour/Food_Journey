@@ -3,6 +3,7 @@ package com.foodjou.fjapp.controllers;
 import com.foodjou.fjapp.domain.Food;
 import com.foodjou.fjapp.domain.Restaurant;
 import com.foodjou.fjapp.domain.User;
+import com.foodjou.fjapp.rabbitmq.RabbitMQProducer;
 import com.foodjou.fjapp.services.FoodService;
 import com.foodjou.fjapp.services.UserService;
 import jakarta.validation.Valid;
@@ -25,7 +26,7 @@ public class FoodController {
 
     private final FoodService foodService;
     private final UserService userService;
-    private static final Logger foodControllerLogger = LoggerFactory.getLogger(FoodController.class);
+    private final RabbitMQProducer producer;
 
 
 
@@ -43,8 +44,7 @@ public class FoodController {
     public ResponseEntity<Food> getFoodById(@PathVariable String foodId,
                                             @AuthenticationPrincipal User currentUser) {
         Food food = foodService.getFoodById(foodId);
-        foodControllerLogger.info("Received a request to get food with ID: {}. Requester: {}. Timestamp: {}",
-                food.getId(), currentUser.getUsername(), LocalDateTime.now());
+        producer.sendFoodLog(food,currentUser);
         return ResponseEntity.status(HttpStatus.OK).body(foodService.getFoodById(foodId));
     }
 

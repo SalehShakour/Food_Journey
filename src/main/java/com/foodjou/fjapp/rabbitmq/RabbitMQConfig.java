@@ -1,4 +1,4 @@
-package com.foodjou.fjapp.config;
+package com.foodjou.fjapp.rabbitmq;
 
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
@@ -12,20 +12,16 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class RabbitMQConfig {
 
-    @Value("${rabbitmq.queue.name}")
-    private String queue;
-    @Value("${rabbitmq.exchange.name}")
-    private String exchange;
-    @Value("${rabbitmq.routing.key}")
-    private String routingKey;
-
     public Queue queue(){
+        String queue = "queue_demo";
         return new Queue(queue);
     }
     public TopicExchange exchange(){
+        String exchange = "exchange_demo";
         return new TopicExchange(exchange);
     }
     public Binding binding(){
-        return BindingBuilder.bind(queue()).to(exchange()).with("saleh_routing_key");
+        String routingKey = "routing_key_demo";
+        return BindingBuilder.bind(queue()).to(exchange()).with(routingKey);
     }
 }
