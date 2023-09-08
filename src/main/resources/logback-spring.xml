@@ -13,8 +13,26 @@
         </encoder>
     </appender>
 
+<!--    <appender name="RABBITMQ" class="org.springframework.amqp.rabbit.logback.AmqpAppender">-->
+<!--        <layout>-->
+<!--            <pattern>%d %-5level [%thread] %logger : %msg%n</pattern>-->
+<!--        </layout>-->
+<!--        <host>my-rabbit</host>-->
+<!--        <port>5672</port>-->
+<!--        <username>guest</username>-->
+<!--        <password>guest</password>-->
+<!--        <virtualHost>logs</virtualHost>-->
+<!--        <routingKey>your-routing-key</routingKey>-->
+<!--        <exchangeName>your-exchange-name</exchangeName>-->
+<!--        <declareExchange>true</declareExchange>-->
+<!--        <declareQueue>true</declareQueue>-->
+<!--    </appender>-->
+
     <logger name="com.foodjou.fjapp.controllers.FoodController" level="INFO">
         <appender-ref ref="FILE"/>
+    </logger>
+    <logger name="com.foodjou.fjapp.controllers.FoodController" level="INFO">
+        <appender-ref ref="RABBITMQ"/>
     </logger>
 
     <root level="INFO">
