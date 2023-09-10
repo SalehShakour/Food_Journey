@@ -6,16 +6,16 @@
         </encoder>
     </appender>
 
-    <appender name="FILE" class="ch.qos.logback.core.FileAppender">
-        <file>logs/food-request.log</file>
-        <encoder>
-            <pattern>%d %-5level [%thread] %logger : %msg%n</pattern>
-        </encoder>
-    </appender>
+<!--    <appender name="FILE" class="ch.qos.logback.core.FileAppender">-->
+<!--        <file>logs/food-request.log</file>-->
+<!--        <encoder>-->
+<!--            <pattern>%d %-5level [%thread] %logger : %msg%n</pattern>-->
+<!--        </encoder>-->
+<!--    </appender>-->
 
-    <logger name="com.foodjou.fjapp.rabbitmq.RabbitMQProducer" level="INFO">
-        <appender-ref ref="FILE"/>
-    </logger>
+<!--    <logger name="com.foodjou.fjapp.rabbitmq.RabbitMQProducer" level="INFO">-->
+<!--        <appender-ref ref="FILE"/>-->
+<!--    </logger>-->
 
     <root level="INFO">
         <appender-ref ref="CONSOLE"/>
