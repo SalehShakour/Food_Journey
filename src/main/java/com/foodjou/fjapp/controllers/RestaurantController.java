@@ -4,6 +4,7 @@ import com.foodjou.fjapp.domain.Food;
 import com.foodjou.fjapp.domain.User;
 import com.foodjou.fjapp.dto.entityDTO.FoodDTO;
 import com.foodjou.fjapp.myEnum.OrderStatus;
+import com.foodjou.fjapp.rabbitmq.RabbitMQProducer;
 import com.foodjou.fjapp.services.FoodOrderService;
 import com.foodjou.fjapp.services.OrderService;
 import com.foodjou.fjapp.services.RestaurantService;
@@ -29,6 +30,7 @@ public class RestaurantController {
     private final RestaurantCacheService restaurantCacheService;
     private final OrderService orderService;
     private final FoodOrderService foodOrderService;
+    private final RabbitMQProducer producer;
 
 
     @PostMapping
@@ -48,9 +50,11 @@ public class RestaurantController {
         return ResponseEntity.status(HttpStatus.CREATED).body("Restaurant updated successfully");
     }
 
-    @GetMapping("/{restaurantId}")
-    public ResponseEntity<RestaurantDTO> getRestaurantById(@PathVariable String restaurantId) {
-        RestaurantDTO restaurantDTO = restaurantService.getRestaurant(restaurantId);
+    @GetMapping("/{restaurantId:[0-9]+}")
+    public ResponseEntity<RestaurantDTO> getRestaurantById(@PathVariable Long restaurantId,
+                                                           @AuthenticationPrincipal User currentUser) {
+        RestaurantDTO restaurantDTO = restaurantService.getRestaurant(String.valueOf(restaurantId));
+        producer.sendRestaurantLog(restaurantId,currentUser);
         return ResponseEntity.status(HttpStatus.OK).body(restaurantDTO);
     }
 
