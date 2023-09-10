@@ -2,8 +2,8 @@ package com.foodjou.fjapp.rabbitmq;
 
 import com.foodjou.fjapp.domain.Food;
 import com.foodjou.fjapp.domain.Order;
-import com.foodjou.fjapp.domain.Restaurant;
 import com.foodjou.fjapp.domain.User;
+import lombok.AllArgsConstructor;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.core.MessageDeliveryMode;
@@ -15,15 +15,12 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 
 @Service
+@AllArgsConstructor
 public class RabbitMQProducer {
     private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(RabbitMQProducer.class);
 
     private final RabbitTemplate rabbitTemplate;
 
-    @Autowired
-    public RabbitMQProducer(RabbitTemplate rabbitTemplate) {
-        this.rabbitTemplate = rabbitTemplate;
-    }
 
     public void sendFoodLog(Food food, User currentUser){
         String textMessage = String.format("Received a request to get food with ID: %d. Requester: %s. Timestamp: %s",
