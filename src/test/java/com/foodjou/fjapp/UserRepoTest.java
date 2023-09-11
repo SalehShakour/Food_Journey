@@ -51,18 +51,6 @@ public class UserRepoTest {
                 "shakour","0000","0","home",new ArrayList<>(),new ArrayList<>());
         notExpected = new User(2L,"test2@email", new HashSet<>(),"saleh",
                 "shakour","0000","0","home",new ArrayList<>(),new ArrayList<>());
-        exRestaurant = new Restaurant();
-        notExRestaurant = new Restaurant();
-        exRestaurant.setId(1L);
-        exRestaurant.setOwner(expected);
-        notExRestaurant.setId(2L);
-        notExRestaurant.setOwner(expected);
-        List<Restaurant> temp = expected.getOwnedRestaurants();
-        temp.add(exRestaurant);
-        expected.setOwnedRestaurants(temp);
-        temp = notExpected.getOwnedRestaurants();
-        temp.add(notExRestaurant);
-        notExpected.setOwnedRestaurants(temp);
 
     }
 
@@ -81,6 +69,19 @@ public class UserRepoTest {
     }
     @Test
     void restaurantByIdTest() {
+        exRestaurant = new Restaurant();
+        notExRestaurant = new Restaurant();
+        exRestaurant.setId(1L);
+        exRestaurant.setOwner(expected);
+        notExRestaurant.setId(2L);
+        notExRestaurant.setOwner(expected);
+        List<Restaurant> temp = expected.getOwnedRestaurants();
+        temp.add(exRestaurant);
+        expected.setOwnedRestaurants(temp);
+        temp = notExpected.getOwnedRestaurants();
+        temp.add(notExRestaurant);
+        notExpected.setOwnedRestaurants(temp);
+
         assertEquals(userService.getRestaurantById(expected,1L),exRestaurant);
         assertThrows(CustomException.class, () -> userService.getRestaurantById(expected,2L));
         assertEquals(userService.getRestaurantById(notExpected,2L),notExRestaurant);
